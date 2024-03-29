@@ -54,10 +54,10 @@ public:
   Vector get_pos(const Sizef& object_size, const Handle& handle) const;
 
   /** advance until at given node, then stop */
-  void goto_node(int node_no);
+  void goto_node(int node_idx);
 
   /** teleport instantly to given node */
-  void jump_to_node(int node_no);
+  void jump_to_node(int node_idx);
 
   /** start advancing automatically */
   void start_moving();
@@ -80,11 +80,11 @@ public:
   bool m_running;
 
 private:
-  size_t m_current_node_nr;
-  size_t m_next_node_nr;
+  size_t m_current_node_idx;
+  size_t m_next_node_idx;
 
   /** stop advancing automatically when this node is reached */
-  int m_stop_at_node_nr;
+  int m_stop_at_node_idx;
 
   /** the position between the current node and the next node as
       fraction between 0 and 1 */

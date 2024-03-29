@@ -38,9 +38,9 @@ PathWalker::Handle::get_pos(const Sizef& size, const Vector& pos) const
 PathWalker::PathWalker(UID path_uid, bool running_) :
   m_path_uid(path_uid),
   m_running(running_),
-  m_current_node_nr(0),
-  m_next_node_nr(),
-  m_stop_at_node_nr(m_running?-1:0),
+  m_current_node_idx(0),
+  m_next_node_idx(),
+  m_stop_at_node_idx(m_running ? -1 : 0),
   m_node_time(0),
   m_node_mult(),
   m_walking_speed(1.0)
@@ -49,7 +49,7 @@ PathWalker::PathWalker(UID path_uid, bool running_) :
   if (!path) return;
   if (!path->is_valid()) return;
 
-  m_next_node_nr = path->m_nodes.size() > 1 ? 1 : 0;
+  m_next_node_idx = path->m_nodes.size() > 1 ? 1 : 0;
   m_node_mult = 1 / path->m_nodes[0].time;
 }
 
@@ -93,12 +93,12 @@ PathWalker::update(float dt_sec)
       goback_node();
     }
 
-    auto current_node = & (path->m_nodes[m_current_node_nr]);
+    auto current_node = & (path->m_nodes[m_current_node_idx]);
     m_node_time = 0;
     if (m_walking_speed > 0) {
       m_node_mult = 1 / current_node->time;
     } else {
-      m_node_mult = 1 / path->m_nodes[m_next_node_nr].time;
+      m_node_mult = 1 / path->m_nodes[m_next_node_idx].time;
     }
   }
 
@@ -112,10 +112,10 @@ PathWalker::get_pos(const Sizef& object_size, const Handle& handle) const
   if (!path) return Vector(0, 0);
   if (!path->is_valid()) return Vector(0, 0);
   if (Editor::is_active()) return path->m_nodes.begin()->position;
-  if (!m_running) return path->m_nodes[m_current_node_nr].position;
+  if (!m_running) return path->m_nodes[m_current_node_idx].position;
 
-  const Path::Node* current_node = &(path->m_nodes[m_current_node_nr]);
-  const Path::Node* next_node = & (path->m_nodes[m_next_node_nr]);
+  const Path::Node* current_node = &(path->m_nodes[m_current_node_idx]);
+  const Path::Node* next_node = & (path->m_nodes[m_next_node_idx]);
 
   easing easeFunc = m_walking_speed > 0 ?
                           getEasingByName(current_node->easing) :
@@ -136,30 +136,30 @@ PathWalker::get_pos(const Sizef& object_size, const Handle& handle) const
 }
 
 void
-PathWalker::goto_node(int node_no)
+PathWalker::goto_node(int node_idx)
 {
   const Path* path = get_path();
   if (!path) return;
 
-  if (node_no == m_stop_at_node_nr) return;
+  if (node_idx == m_stop_at_node_idx) return;
   m_running = true;
-  m_stop_at_node_nr = node_no;
+  m_stop_at_node_idx = node_idx;
 }
 
 void
-PathWalker::jump_to_node(int node_no)
+PathWalker::jump_to_node(int node_idx)
 {
   Path* path = get_path();
   if (!path) return;
 
-  if (node_no >= static_cast<int>(path->get_nodes().size())) return;
-  m_next_node_nr = static_cast<size_t>(node_no);
+  if (node_idx >= static_cast<int>(path->get_nodes().size())) return;
+  m_next_node_idx = static_cast<size_t>(node_idx);
   if (m_walking_speed > 0) {
     advance_node();
   } else if (m_walking_speed < 0) {
     goback_node();
   } else {
-    m_current_node_nr = m_next_node_nr;
+    m_current_node_idx = m_next_node_idx;
   }
   m_node_time = 0.f;
 }
@@ -168,13 +168,13 @@ void
 PathWalker::start_moving()
 {
   m_running = true;
-  m_stop_at_node_nr = -1;
+  m_stop_at_node_idx = -1;
 }
 
 void
 PathWalker::stop_moving()
 {
-  m_stop_at_node_nr = static_cast<int>(m_next_node_nr);
+  m_stop_at_node_idx = static_cast<int>(m_next_node_idx);
 }
 
 void
@@ -184,33 +184,33 @@ PathWalker::advance_node()
   if (!path) return;
   if (!path->is_valid()) return;
 
-  m_current_node_nr = m_next_node_nr;
-  if (static_cast<int>(m_current_node_nr) == m_stop_at_node_nr) m_running = false;
+  m_current_node_idx = m_next_node_idx;
+  if (static_cast<int>(m_current_node_idx) == m_stop_at_node_idx) m_running = false;
 
-  if (m_next_node_nr + 1 < path->m_nodes.size()) {
-    m_next_node_nr++;
+  if (m_next_node_idx + 1 < path->m_nodes.size()) {
+    m_next_node_idx++;
     return;
   }
 
   switch (path->m_mode) {
     case WalkMode::ONE_SHOT:
-      m_next_node_nr = path->m_nodes.size() - 1;
+      m_next_node_idx = path->m_nodes.size() - 1;
       m_walking_speed = 0;
       return;
 
     case WalkMode::PING_PONG:
       m_walking_speed = -m_walking_speed;
-      m_next_node_nr = path->m_nodes.size() > 1 ? path->m_nodes.size() - 2 : 0;
+      m_next_node_idx = path->m_nodes.size() > 1 ? path->m_nodes.size() - 2 : 0;
       return;
 
     case WalkMode::CIRCULAR:
-      m_next_node_nr = 0;
+      m_next_node_idx = 0;
       return;
   }
 
   // we shouldn't get here
   assert(false);
-  m_next_node_nr = path->m_nodes.size() - 1;
+  m_next_node_idx = path->m_nodes.size() - 1;
   m_walking_speed = 0;
 }
 
@@ -221,24 +221,24 @@ PathWalker::goback_node()
   if (!path) return;
   if (!path->is_valid()) return;
 
-  m_current_node_nr = m_next_node_nr;
+  m_current_node_idx = m_next_node_idx;
 
-  if (m_next_node_nr > 0) {
-    m_next_node_nr--;
+  if (m_next_node_idx > 0) {
+    m_next_node_idx--;
     return;
   }
 
   switch (path->m_mode) {
     case WalkMode::PING_PONG:
       m_walking_speed = -m_walking_speed;
-      m_next_node_nr = path->m_nodes.size() > 1 ? 1 : 0;
+      m_next_node_idx = path->m_nodes.size() > 1 ? 1 : 0;
       return;
     default:
       break;
   }
 
   assert(false);
-  m_next_node_nr = 0;
+  m_next_node_idx = 0;
   m_walking_speed = 0;
 }
 

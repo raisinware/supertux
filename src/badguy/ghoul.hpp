@@ -39,8 +39,8 @@ public:
   void activate() override;
   void deactivate() override;
   void active_update(float dt_sec) override;
-  
-  void goto_node(int node_no);
+
+  void goto_node(int node_idx);
   void set_state(const std::string& state);
   void start_moving();
   void stop_moving();
@@ -50,17 +50,17 @@ public:
 protected:
   bool collision_squished(GameObject& object) override;
   std::vector<Direction> get_allowed_directions() const override;
-  
+
 private:
   enum MyState {
     STATE_STOPPED, STATE_IDLE, STATE_TRACKING, STATE_PATHMOVING, STATE_PATHMOVING_TRACK
   };
-  
+
 private:
   MyState m_mystate;
   float m_flyspeed;
   float m_track_range;
-  
+
 private:
   Ghoul(const Ghoul&) = delete;
   Ghoul& operator=(const Ghoul&) = delete;

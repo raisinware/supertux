@@ -35,7 +35,7 @@ Ghoul::Ghoul(const ReaderMapping& reader) :
 {
   reader.get("flyspeed", m_flyspeed, FLYSPEED);
   reader.get("track-range", m_track_range, TRACK_RANGE);
-  
+
   bool running;
   reader.get("running", running, false);
 
@@ -104,18 +104,18 @@ Ghoul::active_update(float dt_sec)
   }
 
   auto player = get_nearest_player();
-  if (!player) 
+  if (!player)
   return;
   Vector p1 = m_col.m_bbox.get_middle();
   Vector p2 = player->get_bbox().get_middle();
   Vector dist = (p2 - p1);
-  
+
   const Rectf& player_bbox = player->get_bbox();
-  
+
   if (player_bbox.get_right() < m_col.m_bbox.get_left()) {
     set_action("left", -1);
   }
-  
+
   if (player_bbox.get_left() > m_col.m_bbox.get_right()) {
     set_action("right", -1);
   }
@@ -157,9 +157,9 @@ Ghoul::active_update(float dt_sec)
 }
 
 void
-Ghoul::goto_node(int node_no)
+Ghoul::goto_node(int node_idx)
 {
-  get_walker()->goto_node(node_no);
+  get_walker()->goto_node(node_idx);
   if (m_mystate != STATE_PATHMOVING && m_mystate != STATE_PATHMOVING_TRACK) {
     m_mystate = STATE_PATHMOVING;
   }

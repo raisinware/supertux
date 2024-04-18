@@ -340,11 +340,7 @@ Player::handle_horizontal_input()
       if(fabs(vx)>SKID_XM && !skidding_timer.check()) {
           skidding_timer.start(SKID_TIME);
 #ifndef NOSOUND
-#ifndef GP2X
           play_sound(sounds[SND_SKID], SOUND_CENTER_SPEAKER);
-#else
-	  play_chunk(SND_SKID);
-#endif
 #endif
           ax *= 2.5;
       } else {
@@ -400,18 +396,10 @@ Player::handle_vertical_input()
           can_jump = false;
           if (size == SMALL) {
 #ifndef NOSOUND
-#ifndef GP2X
             play_sound(sounds[SND_JUMP], SOUND_CENTER_SPEAKER);
-#else
-	    play_chunk(SND_JUMP);
-#endif
 		}
           else {
-#ifndef GP2X
             play_sound(sounds[SND_BIGJUMP], SOUND_CENTER_SPEAKER);
-#else
-	    play_chunk(SND_BIGJUMP);
-#endif
 #endif
           }
         }
@@ -554,11 +542,7 @@ Player::grabdistros()
         ++player_status.lives;
       /*We want to hear the sound even, if MAX_LIVES is reached*/
 #ifndef NOSOUND
-#ifndef GP2X
       play_sound(sounds[SND_LIFEUP], SOUND_CENTER_SPEAKER);
-#else
-      play_chunk(SND_LIFEUP);
-#endif
 #endif
     }
 }
@@ -692,11 +676,7 @@ Player::collision(void* p_c_object, int c_object)
                 {
                    pbad_c->dying = DYING_FALLING;
 #ifndef NOSOUND
-#ifndef GP2X
                    play_sound(sounds[SND_FALL], SOUND_CENTER_SPEAKER);
-#else
-		   play_chunk(SND_FALL);
-#endif
 #endif
                    World::current()->add_score(pbad_c->base.x - scroll_x,
                                                pbad_c->base.y,
@@ -729,12 +709,7 @@ void
 Player::kill(HurtMode mode)
 {
 #ifndef NOSOUND
-#ifndef GP2X
   play_sound(sounds[SND_HURT], SOUND_CENTER_SPEAKER);
-#else
-  play_chunk(SND_HURT);
-  updateSound();
-#endif
 #endif
 
   physic.set_velocity_x(0);
@@ -811,12 +786,6 @@ Player::check_bounds(bool back_scrolling, bool hor_autoscroll)
     {
       kill(KILL);
 #ifndef NOSOUND
-#ifdef GP2X    
-      float wait=SDL_GetTicks()+800;
-      while ( wait > SDL_GetTicks()) {
-         updateSound();
-      }
-#endif
 #endif
 
     }

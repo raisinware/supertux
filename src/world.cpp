@@ -262,9 +262,6 @@ World::draw()
       (*p)->draw(scroll_x, 0, 1);
     }
 #ifndef NOSOUND
-#ifdef GP2X
-    updateSound();
-#endif
 #endif
 }
 
@@ -573,11 +570,7 @@ World::add_bullet(float x, float y, float xm, Direction dir)
   new_bullet.init(x,y,xm,dir);
   bullets.push_back(new_bullet);
 #ifndef NOSOUND
-#ifndef GP2X  
   play_sound(sounds[SND_SHOOT], SOUND_CENTER_SPEAKER);
-#else
-  play_chunk(SND_SHOOT);
-#endif
 #endif
 }
 
@@ -642,11 +635,7 @@ World::trybreakbrick(float x, float y, bool small, Direction col_side)
             }
 
 #ifndef NOSOUND
-#ifndef GP2X
           play_sound(sounds[SND_DISTRO], SOUND_CENTER_SPEAKER);
-#else
-	  play_chunk(SND_DISTRO);
-#endif
 #endif
           player_status.score = player_status.score + SCORE_DISTRO;
           player_status.distros++;
@@ -663,11 +652,7 @@ World::trybreakbrick(float x, float y, bool small, Direction col_side)
           
           /* Get some score: */
 #ifndef NOSOUND
-#ifndef GP2X
           play_sound(sounds[SND_BRICK], SOUND_CENTER_SPEAKER);
-#else
-	  play_chunk(SND_BRICK);
-#endif
 #endif
           player_status.score = player_status.score + SCORE_BRICK;
         }
@@ -697,11 +682,7 @@ World::tryemptybox(float x, float y, Direction col_side)
     case 1: // Box with a distro!
       add_bouncy_distro(posx, posy);
 #ifndef NOSOUND
-#ifndef GP2X
       play_sound(sounds[SND_DISTRO], SOUND_CENTER_SPEAKER);
-#else
-      play_chunk(SND_DISTRO);
-#endif
 #endif
       player_status.score = player_status.score + SCORE_DISTRO;
       player_status.distros++;
@@ -713,11 +694,7 @@ World::tryemptybox(float x, float y, Direction col_side)
       else     /* Tux is big, add an iceflower: */
         add_upgrade(posx, posy, col_side, UPGRADE_ICEFLOWER);
 #ifndef NOSOUND
-#ifndef GP2X
       play_sound(sounds[SND_UPGRADE], SOUND_CENTER_SPEAKER);
-#else
-      play_chunk(SND_UPGRADE);
-#endif
 #endif
       break;
 
@@ -745,11 +722,7 @@ World::trygrabdistro(float x, float y, int bounciness)
     {
       level->change(x, y, TM_IA, tile->next_tile);
 #ifndef NOSOUND
-#ifndef GP2X
       play_sound(sounds[SND_DISTRO], SOUND_CENTER_SPEAKER);
-#else
-      play_chunk(SND_DISTRO);
-#endif
 #endif
 
       if (bounciness == BOUNCE)

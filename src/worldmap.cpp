@@ -610,7 +610,6 @@ WorldMap::get_input()
 			break;
 #endif
 
-#ifndef GP2X      
             case SDL_JOYAXISMOTION:
               if (event.jaxis.axis == joystick_keymap.x_axis)
                 {
@@ -639,29 +638,12 @@ WorldMap::get_input()
                     input_direction = D_EAST;
 	      break;
 
-#endif
             case SDL_JOYBUTTONDOWN:
-#ifndef GP2X
               if (event.jbutton.button == joystick_keymap.b_button)
                 enter_level = true;
               else if (event.jbutton.button == joystick_keymap.start_button)
                 on_escape_press();
               break;
-#else
-              if (event.jbutton.button == joystick_keymap.a_button)
-                enter_level = true;
-              else if (event.jbutton.button == joystick_keymap.start_button)
-                on_escape_press();
-              else if (event.jbutton.button == joystick_keymap.up_button)
-                input_direction = D_NORTH;
-              else if (event.jbutton.button == joystick_keymap.down_button)
-                input_direction = D_SOUTH;
-              else if (event.jbutton.button == joystick_keymap.right_button)
-                input_direction = D_EAST;
-              else if (event.jbutton.button == joystick_keymap.left_button)
-                input_direction = D_WEST;
-              break;
-#endif
 
             default:
               break;
@@ -808,11 +790,7 @@ WorldMap::update(float delta)
 #ifndef NOSOUND
                         MusicRef theme =
                           music_manager->load_music(datadir + "/music/theme.mod");
-#ifdef GP2X
-                        MusicRef credits = music_manager->load_music(datadir + "/music/credits.xm");
-#else
 						MusicRef credits = music_manager->load_music(datadir + "/music/credits.ogg");
-#endif
                         music_manager->play_music(theme);
 #endif
                         // Display final credits and go back to the main menu
@@ -863,12 +841,7 @@ WorldMap::update(float delta)
               level->y == tux->get_tile_pos().y)
 				{
 #ifndef NOSOUND
-#ifndef GP2X
 					play_sound(sounds[SND_TELEPORT], SOUND_CENTER_SPEAKER);
-#else
-					play_chunk(SND_TELEPORT);
-					updateSound();
-#endif
 #endif
 					tux->back_direction = D_NONE;
 					tux->set_tile_pos(Point(level->teleport_dest_x, level->teleport_dest_y));
@@ -1073,7 +1046,6 @@ WorldMap::display()
       Point tux_pos = tux->get_pos();
       if (1)
         {
-#ifndef GP2X
           offset.x = -tux_pos.x + screen->w/2;
           offset.y = -tux_pos.y + screen->h/2;
 
@@ -1082,16 +1054,6 @@ WorldMap::display()
 
           if (offset.x < screen->w - width*32) offset.x = screen->w - width*32;
           if (offset.y < screen->h - height*32) offset.y = screen->h - height*32;
-#else
-          offset.x = -tux_pos.x + 640/2;
-          offset.y = -tux_pos.y + 480/2;
-
-          if (offset.x > 0) offset.x = 0;
-          if (offset.y > 0) offset.y = 0;
-
-          if (offset.x < 640 - width*32) offset.x = 640 - width*32;
-          if (offset.y < 480 - height*32) offset.y = 480 - height*32;
-#endif
         } 
 
       draw(offset);
@@ -1114,9 +1076,6 @@ WorldMap::display()
       flipscreen();
 
 #ifndef NOSOUND
-#ifdef GP2X
-      updateSound();
-#endif
 #endif
       SDL_Delay(20);
     }

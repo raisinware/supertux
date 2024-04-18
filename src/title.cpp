@@ -330,9 +330,6 @@ void title(void)
                              0, 360, 0);
 #endif
 #ifndef NOSOUND
-#ifdef GP2X
-	updateSound();
-#endif
 #endif
 
       /* Don't draw menu, if quit is true */
@@ -366,11 +363,7 @@ void title(void)
                 case MNID_CREDITS:
 #ifndef NOSOUND
                   music_manager = new MusicManager();
-#ifdef GP2X
-                  menu_song  = music_manager->load_music(datadir + "/music/credits.xm");
-#else
                   menu_song  = music_manager->load_music(datadir + "/music/credits.ogg");
-#endif
                   music_manager->halt_music();
                   music_manager->play_music(menu_song,0);
 #endif

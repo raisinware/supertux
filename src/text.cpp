@@ -315,22 +315,6 @@ void display_text_file(const std::string& file, Surface* surface, float scroll_s
                 break;
               }
             break;
-#ifdef GP2X
-	  case SDL_JOYBUTTONDOWN:
-	    if ( event.jbutton.button == joystick_keymap.down_button ) {
-            	    speed += SPEED_INC;
-	    }
-	    if ( event.jbutton.button == joystick_keymap.up_button ) {
-            	    speed -= SPEED_INC;
-	    }	    
-	    if ( event.jbutton.button == joystick_keymap.b_button ) {
-            	    done = 1;
-	    }	    
-	    if ( event.jbutton.button == joystick_keymap.a_button ) {
-            	    scroll += SCROLL;
-	    }
-	  break;
-#endif
 
           case SDL_QUIT:
             done = 1;
@@ -401,14 +385,7 @@ void display_text_file(const std::string& file, Surface* surface, float scroll_s
       if(scroll < 0)
         scroll = 0;
 
-#ifndef GP2X
     SDL_Delay(10);
-#else
-    SDL_Delay(2);
-#ifndef NOSOUND
-    updateSound();
-#endif
-#endif
 
     }
   string_list_free(&names);

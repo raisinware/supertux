@@ -244,10 +244,8 @@ std::string MenuItem::get_input_with_symbol(bool active_item)
 }
 
 /* Set ControlField a key */
-//TODO (GP2X): get joystick in here somehow
 void Menu::get_controlfield_key_into_input(MenuItem *item)
 {
-#ifndef GP2X
   switch(*item->int_p)
   {
   case SDLK_UP:
@@ -294,11 +292,6 @@ void Menu::get_controlfield_key_into_input(MenuItem *item)
     }
     break;
   }
-#else
-      char tmp[64];
-      snprintf(tmp, 64, "%d", *item->int_p);
-      item->change_input(tmp);    
-#endif
 }
 
 /* Free a menu and all its items */
@@ -758,7 +751,6 @@ Menu::event(SDL_Event& event)
   SDLKey key;
   switch(event.type)
   {
-#ifndef GP2X
   case SDL_KEYDOWN:
     key = event.key.keysym.sym;
     SDLMod keymod;
@@ -853,90 +845,11 @@ Menu::event(SDL_Event& event)
         menuaction = MENU_ACTION_UP;
     }
     break;
-#endif
 
   case  SDL_JOYBUTTONDOWN:
-#ifndef GP2X
     menuaction = MENU_ACTION_HIT;
     break;
-#else
 
-    if(item[active_item].kind == MN_CONTROLFIELD)
-    {
-      if( event.jbutton.button == joystick_keymap.start_button )
-      {
-        Menu::pop_current();
-        return;
-      }
-
-       static int save[8]={-1,-1,-1,-1,-1,-1,-1,-1};
-       int itemid=get_active_item_id();
-       int inputkey;
-       switch ( itemid ) {
-    	    case 11 : inputkey=joystick_keymap.up_button;
-		      break;
-    	    case 12 : inputkey=joystick_keymap.down_button;
-		      break;
-    	    case 13 : inputkey=joystick_keymap.left_button;
-		      break;
-    	    case 14 : inputkey=joystick_keymap.right_button;
-		      break;
-    	    case 15 : inputkey=joystick_keymap.a_button;
-		      break;
-    	    case 16 : inputkey=joystick_keymap.b_button;
-		      break;
-	    default : break;
-       }
-
-        *item[active_item].int_p = event.jbutton.button;
-	
-	bool okay=true;
-	
-	save[itemid-11]=event.jbutton.button;
-	
-	int i;
-	for ( i=0;i<itemid-11;i++ ) {
-	    if ( save[i] == event.jbutton.button ) okay=false;
-	}
-	if ( okay == true ) menuaction = MENU_ACTION_DOWN;
-	else menuaction = MENU_ACTION_NONE;
-
-      return;
-    } 
-    
-      if (event.jbutton.button == joystick_keymap.a_button)
-        menuaction = MENU_ACTION_HIT;
-      else if (event.jbutton.button == joystick_keymap.b_button)
-        menuaction = MENU_ACTION_HIT;
-      else if (event.jbutton.button == joystick_keymap.start_button)
-        menuaction = MENU_ACTION_HIT;
-      else if (event.jbutton.button == joystick_keymap.up_button)
-        menuaction = MENU_ACTION_UP;
-      else if (event.jbutton.button == joystick_keymap.down_button)
-        menuaction = MENU_ACTION_DOWN;
-      else if (event.jbutton.button == joystick_keymap.right_button)
-        menuaction = MENU_ACTION_RIGHT;
-      else if (event.jbutton.button == joystick_keymap.left_button)
-        menuaction = MENU_ACTION_LEFT;
-#ifndef NOSOUND
-      else if (event.jbutton.button == joystick_keymap.volup_button)
-#ifdef GP2X
-	increaseSoundVolume();
-#else
-        sound_volume(2);
-#endif
-      else if (event.jbutton.button == joystick_keymap.voldown_button)
-#ifdef GP2X
-	decreaseSoundVolume();
-#else
-        sound_volume(1);
-#endif
-#endif
-    break;
-    
-#endif
-
-#ifndef GP2X
   case SDL_MOUSEBUTTONDOWN:
     x = event.motion.x;
     y = event.motion.y;
@@ -966,7 +879,6 @@ Menu::event(SDL_Event& event)
     break;
   default:
     break;
-#endif
   }
 }
 

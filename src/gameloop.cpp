@@ -298,7 +298,6 @@ GameSession::process_events()
   
               switch(event.type)
                 {
-#ifndef GP2X
                 case SDL_QUIT:        /* Quit event - quit: */
                   st_abort("Received window close", "");
                   break;
@@ -492,9 +491,7 @@ GameSession::process_events()
                         tux.input.down = UP;
                     }
                   break;
-#endif            
                 case SDL_JOYBUTTONDOWN:
-#ifndef GP2X
                   if (event.jbutton.button == joystick_keymap.a_button)
                     tux.input.up = DOWN;
                   else if (event.jbutton.button == joystick_keymap.b_button)
@@ -502,53 +499,14 @@ GameSession::process_events()
                   else if (event.jbutton.button == joystick_keymap.start_button)
                     on_escape_press();
                   break;
-#else
-                  if (event.jbutton.button == joystick_keymap.a_button)
-                    tux.input.up = DOWN;
-                  else if (event.jbutton.button == joystick_keymap.b_button)
-                    tux.input.fire = DOWN;
-                  else if (event.jbutton.button == joystick_keymap.start_button)
-                    on_escape_press();
-                  else if (event.jbutton.button == joystick_keymap.up_button)
-                    tux.input.up = DOWN;
-                  else if (event.jbutton.button == joystick_keymap.down_button)
-                    tux.input.down = DOWN;
-                  else if (event.jbutton.button == joystick_keymap.right_button)
-                    tux.input.right = DOWN;
-                  else if (event.jbutton.button == joystick_keymap.left_button)
-                    tux.input.left = DOWN;
-#ifndef NOSOUND
- 				  else if (event.jbutton.button == joystick_keymap.voldown_button)
-		    decreaseSoundVolume();
-                  else if (event.jbutton.button == joystick_keymap.volup_button)
-		    increaseSoundVolume();
-#endif
-                  break;
-#endif
 
                 case SDL_JOYBUTTONUP:
-#ifndef GP2X
                   if (event.jbutton.button == joystick_keymap.a_button)
                     tux.input.up = UP;
                   else if (event.jbutton.button == joystick_keymap.b_button)
                     tux.input.fire = UP;
                   break;
 
-#else
-                  if (event.jbutton.button == joystick_keymap.a_button)
-                    tux.input.up = UP;
-                  else if (event.jbutton.button == joystick_keymap.b_button)
-                    tux.input.fire = UP;
-                  else if (event.jbutton.button == joystick_keymap.up_button)
-                    tux.input.up = UP;
-                  else if (event.jbutton.button == joystick_keymap.down_button)
-                    tux.input.down = UP;
-                  else if (event.jbutton.button == joystick_keymap.right_button)
-                    tux.input.right = UP;
-                  else if (event.jbutton.button == joystick_keymap.left_button)
-                    tux.input.left = UP;
-                  break;
-#endif
                 default:
                   break;
                 }  /* switch */
@@ -701,9 +659,6 @@ GameSession::draw()
 #endif
 
 #ifndef NOSOUND
-#ifdef GP2X
-  updateSound();
-#endif
 #endif
   updatescreen();
 }
@@ -758,9 +713,6 @@ GameSession::run()
 
   while (exit_status == ES_NONE)
     {
-#ifdef GP2X
-      SDL_Delay(10);
-#endif
       /* Calculate the movement-factor */
       double frame_ratio = ((double)(update_time-last_update_time))/((double)FRAME_RATE);
 
@@ -851,9 +803,6 @@ GameSession::run()
             }
         }
 #ifndef NOSOUND
-#ifdef GP2X
-	updateSound();
-#endif
 #endif
     }
   
@@ -867,11 +816,7 @@ void bumpbrick(float x, float y)
                          (int)(y / (32)) * (32));
 
 #ifndef NOSOUND
-#ifndef GP2X
   play_sound(sounds[SND_BRICK], SOUND_CENTER_SPEAKER);
-#else
-  play_chunk(SND_BRICK);
-#endif
 #endif
 }
 

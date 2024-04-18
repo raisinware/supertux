@@ -75,9 +75,6 @@
 #define SCREEN_H 240
 #endif
 
-#ifdef GP2X
-#define DATA_PREFIX "data/"
-#endif
 
 /* Local function prototypes: */
 
@@ -415,22 +412,18 @@ void st_menu(void)
   main_menu->additem(MN_GOTO, "Bonus Levels",0,contrib_menu, MNID_CONTRIB);
   main_menu->additem(MN_GOTO, "Options",0,options_menu, MNID_OPTIONMENU);
   
-#ifndef GP2X
   main_menu->additem(MN_ACTION,"Level Editor",0,0, MNID_LEVELEDITOR);
-#endif
   main_menu->additem(MN_ACTION,"Credits",0,0, MNID_CREDITS);
   main_menu->additem(MN_ACTION,"Quit",0,0, MNID_QUITMAINMENU);
 
   options_menu->additem(MN_LABEL,"Options",0,0);
   options_menu->additem(MN_HL,"",0,0);
-#ifndef GP2X
 #ifndef NOOPENGL
   options_menu->additem(MN_TOGGLE,"OpenGL",use_gl,0, MNID_OPENGL);
 #else
   options_menu->additem(MN_DEACTIVE,"OpenGL (not supported)",use_gl, 0, MNID_OPENGL);
 #endif
   options_menu->additem(MN_TOGGLE,"Fullscreen",use_fullscreen,0, MNID_FULLSCREEN);
-#endif
 #ifndef NOSOUND
   if(audio_device)
     {
@@ -447,15 +440,9 @@ void st_menu(void)
   options_menu->additem(MN_TOGGLE,"Show Mouse",show_mouse,0, MNID_SHOWMOUSE);
 #endif
   options_menu->additem(MN_TOGGLE,"Show FPS  ",show_fps,0, MNID_SHOWFPS);
-#ifndef GP2X
   options_menu->additem(MN_GOTO,"Keyboard Setup",0,options_keys_menu);
-#endif
 
   //if(use_joystick)
-#ifdef GP2X
-  options_menu->additem(MN_GOTO,"Joystick Move Setup",0,options_joystick_axis_menu);
-  options_menu->additem(MN_GOTO,"Joystick Action Setup",0,options_joystick_button_menu);
-#endif
 
   options_menu->additem(MN_HL,"",0,0);
   options_menu->additem(MN_BACK,"Back",0,0);
@@ -470,7 +457,6 @@ void st_menu(void)
   options_keys_menu->additem(MN_HL,"",0,0);
   options_keys_menu->additem(MN_BACK,"Back",0,0);
 
-#ifndef GP2X
   if(use_joystick)
     {
     options_joystick_menu->additem(MN_LABEL,"Joystick Setup",0,0);
@@ -484,19 +470,6 @@ void st_menu(void)
     options_joystick_menu->additem(MN_HL,"",0,0);
     options_joystick_menu->additem(MN_BACK,"Back",0,0);
     }
-#else
-    options_joystick_axis_menu->additem(MN_LABEL,"Joystick Move Setup",0,0);
-    options_joystick_axis_menu->additem(MN_CONTROLFIELD,"Up", 0,0, 11,&joystick_keymap.up_button);
-    options_joystick_axis_menu->additem(MN_CONTROLFIELD,"Down", 0,0, 12,&joystick_keymap.down_button);
-    options_joystick_axis_menu->additem(MN_CONTROLFIELD,"Left", 0,0, 13,&joystick_keymap.left_button);
-    options_joystick_axis_menu->additem(MN_CONTROLFIELD,"Right", 0,0, 14,&joystick_keymap.right_button);
-    options_joystick_axis_menu->additem(MN_BACK,"Back",0,0);
-
-    options_joystick_button_menu->additem(MN_LABEL,"Joystick Action Setup",0,0);
-    options_joystick_button_menu->additem(MN_CONTROLFIELD,"Jump", 0,0, 15,&joystick_keymap.a_button);
-    options_joystick_button_menu->additem(MN_CONTROLFIELD,"Shoot/Run", 0,0, 16,&joystick_keymap.b_button);
-    options_joystick_button_menu->additem(MN_BACK,"Back",0,0);
-#endif
 
   
   load_game_menu->additem(MN_LABEL,"Start Game",0,0);
@@ -640,11 +613,9 @@ void st_general_setup(void)
 
   srand(SDL_GetTicks());
 
-#ifndef GP2X
   /* Set icon image: */
 
   seticon();
-#endif
 
   /* Unicode needed for input handling: */
 
@@ -746,10 +717,6 @@ void st_video_setup(void)
               "\nError: I could not initialize video!\n"
               "The Simple DirectMedia error that occured was:\n"
               "%s\n\n", SDL_GetError());
-#ifdef GP2X_VERSION
-    chdir("/usr/gp2x");
-    execl("/usr/gp2x/gp2xmenu", "/usr/gp2x/gp2xmenu", NULL);    
-#endif
 
       exit(1);
     }
@@ -763,22 +730,14 @@ void st_video_setup(void)
   Surface::reload_all();
 
   /* Set window manager stuff: */
-#ifndef GP2X_VERSION
   SDL_WM_SetCaption("SuperTux " VERSION, "SuperTux");
-#endif
 }
 
 void st_video_setup_sdl(void)
 {
   if (use_fullscreen)
     {
-#ifndef GP2X
       screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 0, SDL_FULLSCREEN ) ; /* | SDL_HWSURFACE); */
-#else
-//      screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 16, SDL_HWSURFACE | SDL_DOUBLEBUF ) ; /* GP2X */
-      printf("screen width: %d, height: %d\n",SCREEN_W, SCREEN_H);
-      screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 16, SDL_SWSURFACE ) ; /* GP2X */
-#endif
       if (screen == NULL)
         {
           fprintf(stderr,
@@ -791,23 +750,14 @@ void st_video_setup_sdl(void)
     }
   else
     {
-#ifndef GP2X
       screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 0, SDL_HWSURFACE | SDL_DOUBLEBUF );
 
-#else
-//      screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 16, SDL_HWSURFACE | SDL_DOUBLEBUF ) ; /* GP2X */
-      screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 16, SDL_SWSURFACE ) ; /* GP2X */
-#endif
       if (screen == NULL)
         {
           fprintf(stderr,
                   "\nError: I could not set up video for 640x480 mode.\n"
                   "The Simple DirectMedia error that occured was:\n"
                   "%s\n\n", SDL_GetError());
-#ifdef GP2X_VERSION
-    chdir("/usr/gp2x");
-    execl("/usr/gp2x/gp2xmenu", "/usr/gp2x/gp2xmenu", NULL);    
-#endif
           exit(1);
         }
     }
@@ -905,7 +855,6 @@ void st_joystick_setup(void)
 
               use_joystick = false;
             }
-#ifndef GP2X
           else
             {
               if (SDL_JoystickNumAxes(js) < 2)
@@ -927,7 +876,6 @@ void st_joystick_setup(void)
                     }
                 }
             }
-#endif
         }
     }
 }
@@ -962,20 +910,12 @@ void st_audio_setup(void)
         }
     }
 
-#ifdef GP2X
-	//This is from the GP2X patch (without the ifdefs)
-    audio_device = true;
-#endif
     
   /* Open sound silently regarless the value of "use_sound": */
 
   if (audio_device)
     {
-#ifndef GP2X    
       if (open_audio(44100, AUDIO_S16, 2, 2048) < 0)
-#else
-      if (open_audio(44100, AUDIO_S16, 1, 1024) < 0)
-#endif      
         {
           /* only print out message if sound or music
              was not disabled at command-line
@@ -1007,10 +947,6 @@ void st_shutdown(void)
 #endif
   SDL_Quit();
   saveconfig();
-#ifdef GP2X
-    chdir("/usr/gp2x");
-    execl("/usr/gp2x/gp2xmenu", "/usr/gp2x/gp2xmenu", NULL);    
-#endif
 
 }
 
@@ -1027,7 +963,6 @@ void st_abort(const std::string& reason, const std::string& details)
 
 void seticon(void)
 {
-#ifndef GP2X
 //  int masklen;
 //  Uint8 * mask;
   SDL_Surface * icon;
@@ -1062,7 +997,6 @@ void seticon(void)
 
 //  free(mask);
   SDL_FreeSurface(icon);
-#endif
 }
 
 
@@ -1099,7 +1033,6 @@ void parseargs(int argc, char * argv[])
         }
       else if (strcmp(argv[i], "--joymap") == 0)
         {
-#ifndef GP2X
           assert(i+1 < argc);
           if (sscanf(argv[++i],
                      "%d:%d:%d:%d:%d", 
@@ -1120,7 +1053,6 @@ void parseargs(int argc, char * argv[])
                         << "  B-Button:     " << joystick_keymap.b_button << "\n"
                         << "  Start-Button: " << joystick_keymap.start_button << std::endl;
             }
-#endif
         }
       else if (strcmp(argv[i], "--leveleditor") == 0)
         {

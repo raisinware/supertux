@@ -100,22 +100,12 @@ void loadconfig(void)
   else
     use_joystick = true;
 
-#ifndef GP2X
   reader.read_int ("joystick-x", &joystick_keymap.x_axis);
   reader.read_int ("joystick-y", &joystick_keymap.y_axis);
   reader.read_int ("joystick-a", &joystick_keymap.a_button);
   reader.read_int ("joystick-b", &joystick_keymap.b_button);
   reader.read_int ("joystick-start", &joystick_keymap.start_button);
   reader.read_int ("joystick-deadzone", &joystick_keymap.dead_zone);
-#else
-  reader.read_int ("joystick-up", &joystick_keymap.up_button);
-  reader.read_int ("joystick-down", &joystick_keymap.down_button);
-  reader.read_int ("joystick-right", &joystick_keymap.right_button);
-  reader.read_int ("joystick-left", &joystick_keymap.left_button);
-  reader.read_int ("joystick-a", &joystick_keymap.a_button);
-  reader.read_int ("joystick-b", &joystick_keymap.b_button);
-  reader.read_int ("joystick-start", &joystick_keymap.start_button);
-#endif
 
   reader.read_int ("keyboard-jump", &keymap.jump);
   reader.read_int ("keyboard-duck", &keymap.duck);
@@ -153,22 +143,12 @@ void saveconfig (void)
       fprintf(config, "\n\t;; joystick number (-1 means no joystick):\n");
       fprintf(config, "\t(joystick   %d)\n", use_joystick ? joystick_num : -1);
 
-#ifndef GP2X
       fprintf(config, "\t(joystick-x   %d)\n", joystick_keymap.x_axis);
       fprintf(config, "\t(joystick-y   %d)\n", joystick_keymap.y_axis);
       fprintf(config, "\t(joystick-a   %d)\n", joystick_keymap.a_button);
       fprintf(config, "\t(joystick-b   %d)\n", joystick_keymap.b_button);
       fprintf(config, "\t(joystick-start  %d)\n", joystick_keymap.start_button);
       fprintf(config, "\t(joystick-deadzone  %d)\n", joystick_keymap.dead_zone);
-#else
-      fprintf(config, "\t(joystick-up   %d)\n", joystick_keymap.up_button);
-      fprintf(config, "\t(joystick-down   %d)\n", joystick_keymap.down_button);
-      fprintf(config, "\t(joystick-right   %d)\n", joystick_keymap.right_button);
-      fprintf(config, "\t(joystick-left   %d)\n", joystick_keymap.left_button);
-      fprintf(config, "\t(joystick-a   %d)\n", joystick_keymap.a_button);
-      fprintf(config, "\t(joystick-b   %d)\n", joystick_keymap.b_button);
-      fprintf(config, "\t(joystick-start  %d)\n", joystick_keymap.start_button);
-#endif
 
       fprintf(config, "\t(keyboard-jump  %d)\n", keymap.jump);
       fprintf(config, "\t(keyboard-duck  %d)\n", keymap.duck);

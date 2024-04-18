@@ -45,42 +45,14 @@
 
 void clearscreen(int r, int g, int b)
 {
-#ifndef NOOPENGL
-  if(use_gl)
-    {
-      glClearColor(r/256, g/256, b/256, 1.0);
-      glClear(GL_COLOR_BUFFER_BIT);
-    }
-  else
-  {
-#endif
 
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, r, g, b));
-#ifndef NOOPENGL
-
-    }
-#endif
 }
 
 /* --- DRAWS A VERTICAL GRADIENT --- */
 
 void drawgradient(Color top_clr, Color bot_clr)
 {
-#ifndef NOOPENGL
-  if(use_gl)
-    {
-      glBegin(GL_QUADS);
-      glColor3ub(top_clr.red, top_clr.green, top_clr.blue);
-      glVertex2f(0, 0);
-      glVertex2f(640, 0);
-      glColor3ub(bot_clr.red, bot_clr.green, bot_clr.blue);
-      glVertex2f(640, 480);
-      glVertex2f(0, 480);
-      glEnd();
-    }
-  else
-  {
-#endif
 
     for(float y = 0; y < 480; y += 2)
       fillrect(0, (int)y, 640, 2,
@@ -89,10 +61,6 @@ void drawgradient(Color top_clr, Color bot_clr)
                      (int)(((float)(top_clr.blue-bot_clr.blue)/(0-480)) * y + top_clr.blue), 255);
 /* calculates the color for each line, based in the generic equation for functions: y = mx + b */
 
-#ifndef NOOPENGL
-
-    }
-#endif
 }
 
 /* --- FADE IN --- */
@@ -215,22 +183,6 @@ void drawline(int x1, int y1, int x2, int y2, int r, int g, int b, int a)
  y2=y2/2;
 #endif
 
-#ifndef NOOPENGL
-  if(use_gl)
-    {
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glColor4ub(r, g, b,a);
-
-      glBegin(GL_LINES);
-      glVertex2f(x1, y1);
-      glVertex2f(x2, y2);
-      glEnd();
-      glDisable(GL_BLEND);
-    }
-  else
-    {
-#endif
 
       /* Basic unantialiased Bresenham line algorithm */
       int lg_delta, sh_delta, cycle, lg_step, sh_step;
@@ -271,10 +223,6 @@ void drawline(int x1, int y1, int x2, int y2, int r, int g, int b, int a)
           y1 += sh_step;
         }
       drawpixel(x1, y1, color);
-#ifndef NOOPENGL
-
-    }
-#endif
 }
 
 /* --- FILL A RECT --- */
@@ -299,24 +247,6 @@ if(h < 0)
     h=h/2;
 #endif
 
-#ifndef NOOPENGL
-  if(use_gl)
-    {
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glColor4ub(r, g, b,a);
-
-      glBegin(GL_POLYGON);
-      glVertex2f(x, y);
-      glVertex2f(x+w, y);
-      glVertex2f(x+w, y+h);
-      glVertex2f(x, y+h);
-      glEnd();
-      glDisable(GL_BLEND);
-    }
-  else
-    {
-#endif
       SDL_Rect src, rect;
       SDL_Surface *temp = NULL;
 
@@ -350,10 +280,6 @@ if(h < 0)
       else
         SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, r, g, b));
 
-#ifndef NOOPENGL
-
-    }
-#endif
 }
 
 

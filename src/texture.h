@@ -23,9 +23,6 @@
 
 #include <SDL.h>
 #include <string>
-#ifndef NOOPENGL
-#include <SDL_opengl.h>
-#endif
 
 #include <list>
 #include "screen.h"
@@ -133,27 +130,6 @@ public:
   int draw_stretched(float x, float y, int w, int h, Uint8 alpha, bool update);
 };
 
-#ifndef NOOPENGL
-class SurfaceOpenGL : public SurfaceImpl
-{
-public:
-  unsigned gl_texture;
-
-public:
-  SurfaceOpenGL(SDL_Surface* surf, int use_alpha);
-  SurfaceOpenGL(const std::string& file, int use_alpha);  
-  SurfaceOpenGL(const std::string& file, int x, int y, int w, int h, int use_alpha);
-  virtual ~SurfaceOpenGL();
-
-  int draw(float x, float y, Uint8 alpha, bool update);
-  int draw_bg(Uint8 alpha, bool update);
-  int draw_part(float sx, float sy, float x, float y, float w, float h,  Uint8 alpha, bool update);
-  int draw_stretched(float x, float y, int w, int h, Uint8 alpha, bool update);
-
-private:
-  void create_gl(SDL_Surface * surf, GLuint * tex);
-};
-#endif 
 
 #endif /*SUPERTUX_TEXTURE_H*/
 

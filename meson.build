@@ -11,8 +11,7 @@ message('Data Prefix: ' + data_prefix)
 
 add_project_arguments('-DDATA_PREFIX="@0@"'.format(data_prefix), language: ['cpp'])
 add_project_arguments('-DVERSION="@0@"'.format(meson.project_version()), language: ['cpp'])
-# TODO: add sound + opengl support
+# TODO: add sound support
 add_project_arguments('-DNOSOUND', language: ['cpp'])
-add_project_arguments('-DNOOPENGL', language: ['cpp'])
 
 subdir('src')

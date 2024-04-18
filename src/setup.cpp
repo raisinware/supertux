@@ -28,9 +28,6 @@
 #include <string>
 #include <SDL.h>
 #include <SDL_image.h>
-#ifndef NOOPENGL
-#include <SDL_opengl.h>
-#endif
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -418,11 +415,7 @@ void st_menu(void)
 
   options_menu->additem(MN_LABEL,"Options",0,0);
   options_menu->additem(MN_HL,"",0,0);
-#ifndef NOOPENGL
-  options_menu->additem(MN_TOGGLE,"OpenGL",use_gl,0, MNID_OPENGL);
-#else
   options_menu->additem(MN_DEACTIVE,"OpenGL (not supported)",use_gl, 0, MNID_OPENGL);
-#endif
   options_menu->additem(MN_TOGGLE,"Fullscreen",use_fullscreen,0, MNID_FULLSCREEN);
 #ifndef NOSOUND
   if(audio_device)
@@ -564,15 +557,7 @@ void process_options_menu(void)
   switch (options_menu->check())
     {
     case MNID_OPENGL:
-#ifndef NOOPENGL
-      if(use_gl != options_menu->isToggled(MNID_OPENGL))
-        {
-          use_gl = !use_gl;
-          st_video_setup();
-        }
-#else
       options_menu->get_item_by_id(MNID_OPENGL).toggled = false;
-#endif
       break;
     case MNID_FULLSCREEN:
       if(use_fullscreen != options_menu->isToggled(MNID_FULLSCREEN))
@@ -765,57 +750,6 @@ void st_video_setup_sdl(void)
 
 void st_video_setup_gl(void)
 {
-#ifndef NOOPENGL
-
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-  if (use_fullscreen)
-    {
-      screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 0, SDL_FULLSCREEN | SDL_OPENGL) ; /* | SDL_HWSURFACE); */
-      if (screen == NULL)
-        {
-          fprintf(stderr,
-                  "\nWarning: I could not set up fullscreen video for "
-                  "640x480 mode.\n"
-                  "The Simple DirectMedia error that occured was:\n"
-                  "%s\n\n", SDL_GetError());
-          use_fullscreen = false;
-        }
-    }
-  else
-    {
-      screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 0, SDL_OPENGL);
-
-      if (screen == NULL)
-        {
-          fprintf(stderr,
-                  "\nError: I could not set up video for 640x480 mode.\n"
-                  "The Simple DirectMedia error that occured was:\n"
-                  "%s\n\n", SDL_GetError());
-          exit(1);
-        }
-    }
-
-  /*
-   * Set up OpenGL for 2D rendering.
-   */
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
-
-  glViewport(0, 0, screen->w, screen->h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(0, screen->w, screen->h, 0, -1.0, 1.0);
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glTranslatef(0.0f, 0.0f, 0.0f);
-
-#endif
 
 }
 
@@ -1073,11 +1007,6 @@ void parseargs(int argc, char * argv[])
       else if (strcmp(argv[i], "--opengl") == 0 ||
                strcmp(argv[i], "-gl") == 0)
         {
-#ifndef NOOPENGL
-          /* Use OpengGL: */
-
-          use_gl = true;
-#endif
         }
       else if (strcmp(argv[i], "--sdl") == 0)
           {

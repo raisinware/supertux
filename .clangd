@@ -1,0 +1,6 @@
+If:
+  PathMatch: [.*\.h, .*\.cpp]
+CompileFlags:
+  Add: [-xc++, -std=c++11, -Wall, -Wextra, -DNOSOUND, -DNOOPENGL, -I/usr/include/SDL/]
+Diagnostics:
+  UnusedIncludes: None

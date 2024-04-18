@@ -23,3 +23,5 @@
 /result
 /result-[0-9]
 
+/.cache
+/.vscode

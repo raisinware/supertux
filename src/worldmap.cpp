@@ -22,6 +22,7 @@
 #include <vector>
 #include <assert.h>
 #include <unistd.h>
+#include "SDL_scancode.h"
 #include "globals.h"
 #include "texture.h"
 #include "screen.h"
@@ -653,15 +654,15 @@ WorldMap::get_input()
 
   if (!Menu::current())
     {
-      Uint8 *keystate = SDL_GetKeyState(NULL);
+      const Uint8 *keystate = SDL_GetKeyboardState(NULL);
   
-      if (keystate[SDLK_LEFT])
+      if (keystate[SDL_SCANCODE_LEFT])
         input_direction = D_WEST;
-      else if (keystate[SDLK_RIGHT])
+      else if (keystate[SDL_SCANCODE_RIGHT])
         input_direction = D_EAST;
-      else if (keystate[SDLK_UP])
+      else if (keystate[SDL_SCANCODE_UP])
         input_direction = D_NORTH;
-      else if (keystate[SDLK_DOWN])
+      else if (keystate[SDL_SCANCODE_DOWN])
         input_direction = D_SOUTH;
     }
 }

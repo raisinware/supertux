@@ -138,7 +138,7 @@ public:
 
 public:
   void init();
-  int  key_event(SDLKey key, int state);
+  int  key_event(SDL_KeyCode key, int state);
   void level_begin();
   void action(double frame_ratio);
   void handle_input();

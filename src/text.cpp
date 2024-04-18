@@ -58,7 +58,7 @@ Text::Text(const std::string& file, int kind_, int w_, int h_)
   chars = new Surface(file, USE_ALPHA);
 
   // Load shadow font.
-  conv = SDL_DisplayFormatAlpha(chars->impl->get_sdl_surface());
+  conv = SDL_ConvertSurfaceFormat(chars->impl->get_sdl_surface(), SDL_PIXELFORMAT_RGBA8888, 0);
   pixels = conv->w * conv->h;
   SDL_LockSurface(conv);
   for(i = 0; i < pixels; ++i)
@@ -67,7 +67,7 @@ Text::Text(const std::string& file, int kind_, int w_, int h_)
       *p = *p & conv->format->Amask;
     }
   SDL_UnlockSurface(conv);
-  SDL_SetAlpha(conv, SDL_SRCALPHA, 128);
+  SDL_SetSurfaceAlphaMod(conv, 128);
   shadow_chars = new Surface(conv, USE_ALPHA);
 
   SDL_FreeSurface(conv);
@@ -284,7 +284,7 @@ void display_text_file(const std::string& file, Surface* surface, float scroll_s
 
   length = names.num_items;
 
-  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+  //SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
   Uint32 lastticks = SDL_GetTicks();
   while(done == 0)
@@ -390,7 +390,8 @@ void display_text_file(const std::string& file, Surface* surface, float scroll_s
     }
   string_list_free(&names);
 
-  SDL_EnableKeyRepeat(0, 0);    // disables key repeating
+  // TODO: add key repeating checks check in Menu
+  //SDL_EnableKeyRepeat(0, 0);    // disables key repeating
   Menu::set_current(main_menu);
 }
 

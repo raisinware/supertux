@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "SDL_video.h"
 #include <assert.h>
 #include <stdio.h>
 #include <iostream>
@@ -602,10 +603,6 @@ void st_general_setup(void)
 
   seticon();
 
-  /* Unicode needed for input handling: */
-
-  SDL_EnableUNICODE(1);
-
   /* Load global images: */
 
 #ifndef RES320X240
@@ -715,14 +712,16 @@ void st_video_setup(void)
   Surface::reload_all();
 
   /* Set window manager stuff: */
-  SDL_WM_SetCaption("SuperTux " VERSION, "SuperTux");
+  //SDL_WM_SetCaption("SuperTux " VERSION, "SuperTux");
 }
 
 void st_video_setup_sdl(void)
 {
   if (use_fullscreen)
     {
-      screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 0, SDL_FULLSCREEN ) ; /* | SDL_HWSURFACE); */
+      window = SDL_CreateWindow("SuperTux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, SDL_WINDOW_FULLSCREEN);
+      screen = SDL_GetWindowSurface(window);
+
       if (screen == NULL)
         {
           fprintf(stderr,
@@ -735,7 +734,8 @@ void st_video_setup_sdl(void)
     }
   else
     {
-      screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 0, SDL_HWSURFACE | SDL_DOUBLEBUF );
+      window = SDL_CreateWindow("SuperTux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, 0);
+      screen = SDL_GetWindowSurface(window);
 
       if (screen == NULL)
         {
@@ -924,7 +924,7 @@ void seticon(void)
 
   /* Set icon: */
 
-  SDL_WM_SetIcon(icon, NULL);//mask);
+  //SDL_WM_SetIcon(icon, NULL);//mask);
 
 
   /* Free icon surface & mask: */

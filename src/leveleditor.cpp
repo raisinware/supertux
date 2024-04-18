@@ -487,7 +487,7 @@ void le_init_menus()
         {
           imagefile += "notile.png";
         }
-        Button* button = new Button(imagefile, it->name, SDLKey(SDLK_a + i),
+        Button* button = new Button(imagefile, it->name, (SDL_KeyCode)(SDLK_a + i),
                                     0, 0, 32, 32);
         if(!only_editor_image)
           if(!TileManager::instance()->get(*sit)->editor_filenames.empty())
@@ -509,7 +509,7 @@ void le_init_menus()
   for(int i = 0; i < NUM_BadGuyKinds; ++i)
   {
     BadGuy bad_tmp(0,0,BadGuyKind(i),false);
-    objects_map["BadGuys"]->additem(new Button("", "BadGuy",(SDLKey)(i+'a'),0,0,32,32),1000000+i);
+    objects_map["BadGuys"]->additem(new Button("", "BadGuy",(SDL_KeyCode)(i+'a'),0,0,32,32),1000000+i);
     objects_map["BadGuys"]->manipulate_button(i)->set_game_object(new BadGuy(objects_map["BadGuys"]->manipulate_button(i)->get_pos().x,objects_map["BadGuys"]->manipulate_button(i)->get_pos().y,BadGuyKind(i),false));
   }
 
@@ -583,7 +583,7 @@ int le_init()
 
   le_init_menus();
 
-  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+  //SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
 
   return 0;
@@ -712,7 +712,7 @@ void le_goto_level(int levelnb)
 
 void le_quit(void)
 {
-  SDL_EnableKeyRepeat(0, 0);    // disables key repeating
+  //SDL_EnableKeyRepeat(0, 0);    // disables key repeating
 
   le_unload_level();
   delete le_selection;
@@ -1068,8 +1068,8 @@ void le_change_object_properties(GameObject *pobj)
 
 void le_checkevents()
 {
-  SDLKey key;
-  SDLMod keymod;
+  SDL_KeyCode key;
+  SDL_Keymod keymod;
   Button* pbutton;
   int x,y;
 
@@ -1097,7 +1097,7 @@ void le_checkevents()
         switch(event.type)
         {
         case SDL_KEYDOWN:	// key pressed
-          key = event.key.keysym.sym;
+          key = (SDL_KeyCode)event.key.keysym.sym;
           switch(key)
           {
           case SDLK_ESCAPE:

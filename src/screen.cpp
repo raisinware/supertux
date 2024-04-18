@@ -79,11 +79,11 @@ delete sur;
 
 void fade(Surface *surface, int seconds, bool fade_out)
 {
-float alpha;
-if (fade_out)
-  alpha = 0;
-else
-  alpha = 255;
+  float alpha;
+  if (fade_out)
+    alpha = 0;
+  else
+    alpha = 255;
 
   int cur_time, old_time;
   cur_time = SDL_GetTicks();
@@ -168,9 +168,9 @@ void drawpixel(int x, int y, Uint32 pixel)
     }
   /* Update just the part of the display that we've changed */
 #ifndef RES320X240
-  SDL_UpdateRect(screen, x, y, 1, 1);
+  update_rect(screen, x, y, 1, 1);
 #else
-  SDL_UpdateRect(screen, x/2, y/2, 1, 1);
+  update_rect(screen, x/2, y/2, 1, 1);
 #endif
 }
 
@@ -271,9 +271,7 @@ if(h < 0)
 
           SDL_FillRect(temp, &src, SDL_MapRGB(screen->format, r, g, b));
 
-          SDL_SetAlpha(temp, SDL_SRCALPHA, a);
-
-          SDL_BlitSurface(temp,0,screen,&rect);
+          SDL_UpperBlit(temp,0,screen,&rect);
 
           SDL_FreeSurface(temp);
         }
@@ -287,18 +285,12 @@ if(h < 0)
 
 void updatescreen(void)
 {
-  if(use_gl)  /*clearscreen(0,0,0);*/
-    SDL_GL_SwapBuffers();
-  else
-    SDL_UpdateRect(screen, 0, 0, screen->w, screen->h);
+  update_rect(screen, 0, 0, screen->w, screen->h);
 }
 
 void flipscreen(void)
 {
-  if(use_gl)
-    SDL_GL_SwapBuffers();
-  else
-    SDL_Flip(screen);
+  SDL_UpdateWindowSurface(window);
 }
 
 void fadeout()
@@ -310,11 +302,12 @@ void fadeout()
 
 void update_rect(SDL_Surface *scr, Sint32 x, Sint32 y, Sint32 w, Sint32 h)
 {
-  if(!use_gl)
-#ifndef RES320X240
-    SDL_UpdateRect(scr, x, y, w, h);
-#else
-    SDL_UpdateRect(scr, x, y, w, h);
-#endif
+  SDL_Rect rect = {
+    .x = x,
+    .y = y,
+    .w = w,
+    .h = h
+  };
+  SDL_UpdateWindowSurfaceRects(window, &rect, 1);
 }
 

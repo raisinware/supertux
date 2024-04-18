@@ -47,7 +47,9 @@ struct JoystickKeymap
 
 extern JoystickKeymap joystick_keymap;
 
+extern SDL_Window* window;
 extern SDL_Surface * screen;
+
 extern Text* black_text;
 extern Text* gold_text;
 extern Text* silver_text;

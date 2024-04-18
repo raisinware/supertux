@@ -1,8 +1,8 @@
 project('supertux-milestone1', 'cpp',
         version: '0.1.4')
 
-sdl1 = dependency('sdl12_compat')
-sdl1_image = dependency('SDL_image')
+sdl2 = dependency('sdl2')
+sdl2_image = dependency('SDL2_image')
 zlib = dependency('zlib')
 
 #data_prefix = './data'

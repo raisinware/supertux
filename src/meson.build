@@ -36,4 +36,4 @@ supertux_src = [
 
 executable('supertux-milestone1', supertux_src,
            win_subsystem: 'windows',
-           dependencies: [sdl1, sdl1_image, zlib])
+           dependencies: [sdl2, sdl2_image, zlib])

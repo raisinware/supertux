@@ -370,7 +370,7 @@ void title(void)
                   display_text_file("CREDITS", bkg_title, SCROLL_SPEED_CREDITS);
 #ifndef NOSOUND
                   music_manager->halt_music();
-                  menu_song = music_manager->load_music(datadir + "/music/theme.mod");
+                  menu_song = music_manager->load_music(datadir + "/music/theme.ogg");
                   music_manager->play_music(menu_song);
 #endif
                   Menu::set_current(main_menu);

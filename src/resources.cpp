@@ -199,8 +199,8 @@ void loadshared()
     sounds[i] = load_sound(datadir + soundfilenames[i]);
 
   /* Herring song */
-  herring_song = music_manager->load_music(datadir + "/music/salcon.mod");
-  level_end_song = music_manager->load_music(datadir + "/music/leveldone.mod");
+  herring_song = music_manager->load_music(datadir + "/music/salcon.ogg");
+  level_end_song = music_manager->load_music(datadir + "/music/leveldone.ogg");
 #endif
 }
 

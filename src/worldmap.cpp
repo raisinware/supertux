@@ -396,7 +396,7 @@ WorldMap::WorldMap()
   enter_level = false;
 
   name = "<no file>";
-  music = "salcon.mod";
+  music = "salcon.ogg";
 }
 
 WorldMap::~WorldMap()
@@ -790,7 +790,7 @@ WorldMap::update(float delta)
                       { 
 #ifndef NOSOUND
                         MusicRef theme =
-                          music_manager->load_music(datadir + "/music/theme.mod");
+                          music_manager->load_music(datadir + "/music/theme.ogg");
 						MusicRef credits = music_manager->load_music(datadir + "/music/credits.ogg");
                         music_manager->play_music(theme);
 #endif

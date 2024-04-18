@@ -253,7 +253,7 @@ sdl_surface_part_from_file(const std::string& file, int x, int y, int w, int h, 
   src.w = w;
   src.h = h;
 
-  conv = SDL_CreateRGBSurface(temp->flags, w, h, temp->format->BitsPerPixel,
+  conv = SDL_CreateRGBSurface(0, w, h, temp->format->BitsPerPixel,
                               temp->format->Rmask,
                               temp->format->Gmask,
                               temp->format->Bmask,
@@ -267,7 +267,7 @@ sdl_surface_part_from_file(const std::string& file, int x, int y, int w, int h, 
      #endif*/
 
   SDL_UpperBlit(temp, &src, conv, NULL);
-  SDL_ConvertSurfaceFormat(conv, SDL_PIXELFORMAT_RGBA8888, 0);
+  sdl_surface = SDL_ConvertSurfaceFormat(conv, SDL_PIXELFORMAT_RGBA8888, 0);
 
   if (sdl_surface == NULL)
     st_abort("Can't covert to display format", file);
@@ -511,7 +511,7 @@ SurfaceSDL::draw_stretched(float x, float y, int sw, int sh, Uint8 alpha, bool u
   dest.w = (int)sw;
   dest.h = (int)sh;
 
-  SDL_Surface* sdl_surface_copy = SDL_CreateRGBSurface (sdl_surface->flags,
+  SDL_Surface* sdl_surface_copy = SDL_CreateRGBSurface (0,
                                   sw, sh, sdl_surface->format->BitsPerPixel,
                                   sdl_surface->format->Rmask, sdl_surface->format->Gmask,
                                   sdl_surface->format->Bmask,

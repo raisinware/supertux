@@ -257,7 +257,7 @@ if(h < 0)
 
       if(a != 255)
         {
-          temp = SDL_CreateRGBSurface(screen->flags, rect.w, rect.h, screen->format->BitsPerPixel,
+          temp = SDL_CreateRGBSurface(0, rect.w, rect.h, screen->format->BitsPerPixel,
                                       screen->format->Rmask,
                                       screen->format->Gmask,
                                       screen->format->Bmask,

@@ -34,6 +34,14 @@ supertux_src = [
 'sprite_manager.cpp'
 ]
 
+if enable_sound
+    supertux_src = supertux_src + [
+        'music_manager.cpp',
+        'musicref.cpp',
+        'sound.cpp',
+    ]
+endif
+
 executable('supertux-milestone1', supertux_src,
            win_subsystem: 'windows',
-           dependencies: [sdl2, sdl2_image, zlib])
+           dependencies: [sdl2, sdl2_image, sdl2_mixer, zlib])

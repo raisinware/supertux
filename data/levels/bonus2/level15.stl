@@ -3,7 +3,7 @@
   (version 1)
   (name "Frozen Tunnel")
   (author "Nilrok")
-  (music "salcon.mod")
+  (music "salcon.ogg")
   (background "cave2.jpg")
   (particle_system "")
   (bkgd_speed 50)

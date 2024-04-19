@@ -375,7 +375,7 @@ SurfaceSDL::draw(float x, float y, Uint8 alpha, bool update)
     /* Note: this has to be done, since SDL doesn't allow to set alpha to surfaces that
       already have an alpha mask yet... */
 
-    SDL_Surface* sdl_surface_copy = SDL_CreateRGBSurface (sdl_surface->flags,
+    SDL_Surface* sdl_surface_copy = SDL_CreateRGBSurface (0,
                                     sdl_surface->w, sdl_surface->h, sdl_surface->format->BitsPerPixel,
                                     sdl_surface->format->Rmask, sdl_surface->format->Gmask,
                                     sdl_surface->format->Bmask,
@@ -421,7 +421,7 @@ SurfaceSDL::draw_bg(Uint8 alpha, bool update)
     /* Note: this has to be done, since SDL doesn't allow to set alpha to surfaces that
       already have an alpha mask yet... */
 
-    SDL_Surface* sdl_surface_copy = SDL_CreateRGBSurface (sdl_surface->flags,
+    SDL_Surface* sdl_surface_copy = SDL_CreateRGBSurface (0,
                                     sdl_surface->w, sdl_surface->h, sdl_surface->format->BitsPerPixel,
                                     sdl_surface->format->Rmask, sdl_surface->format->Gmask,
                                     sdl_surface->format->Bmask,
@@ -472,7 +472,7 @@ SurfaceSDL::draw_part(float sx, float sy, float x, float y, float w, float h, Ui
     /* Note: this has to be done, since SDL doesn't allow to set alpha to surfaces that
       already have an alpha mask yet... */
 
-    SDL_Surface* sdl_surface_copy = SDL_CreateRGBSurface (sdl_surface->flags,
+    SDL_Surface* sdl_surface_copy = SDL_CreateRGBSurface (0,
                                     sdl_surface->w, sdl_surface->h, sdl_surface->format->BitsPerPixel,
                                     sdl_surface->format->Rmask, sdl_surface->format->Gmask,
                                     sdl_surface->format->Bmask,

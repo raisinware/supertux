@@ -148,7 +148,7 @@ BouncyBrick::draw()
   
 #ifndef RES320X240
   if (base.x >= scroll_x - 32 &&
-      base.x <= scroll_x + screen->w)
+      base.x <= scroll_x + Globals::screen->w)
 #else
   if (base.x >= scroll_x - 32 &&
       base.x <= scroll_x + 640)
@@ -219,7 +219,7 @@ FloatingScore::draw()
 {
   char str[10];
   sprintf(str, "%d", value);
-  gold_text->draw(str, (int)base.x + 16 - strlen(str) * 8, (int)base.y, 1);
+  Globals::gold_text->draw(str, (int)base.x + 16 - strlen(str) * 8, (int)base.y, 1);
 }
 
 /* EOF */

@@ -102,9 +102,9 @@ void LevelSubset::load(char *subset)
 
   name = subset;
 
-  snprintf(filename, 1024, "%s/levels/%s/info", st_dir, subset);
+  snprintf(filename, 1024, "%s/levels/%s/info", Globals::st_dir, subset);
   if(!faccessible(filename))
-    snprintf(filename, 1024, "%s/levels/%s/info", datadir.c_str(), subset);
+    snprintf(filename, 1024, "%s/levels/%s/info", Globals::datadir.c_str(), subset);
   if(faccessible(filename))
     {
       fi = fopen(filename, "r");
@@ -145,7 +145,7 @@ void LevelSubset::load(char *subset)
         }
       else
         {
-          snprintf(filename, 1024, "%s/images/status/level-subset-info.png", datadir.c_str());
+          snprintf(filename, 1024, "%s/images/status/level-subset-info.png", Globals::datadir.c_str());
           delete image;
           image = new Surface(filename,IGNORE_ALPHA);
         }
@@ -154,10 +154,10 @@ void LevelSubset::load(char *subset)
   for(i=1; i != -1; ++i)
     {
       /* Get the number of levels in this subset */
-      snprintf(filename, 1024, "%s/levels/%s/level%d.stl", st_dir, subset,i);
+      snprintf(filename, 1024, "%s/levels/%s/level%d.stl", Globals::st_dir, subset,i);
       if(!faccessible(filename))
         {
-          snprintf(filename, 1024, "%s/levels/%s/level%d.stl", datadir.c_str(), subset,i);
+          snprintf(filename, 1024, "%s/levels/%s/level%d.stl", Globals::datadir.c_str(), subset,i);
           if(!faccessible(filename))
             break;
         }
@@ -174,9 +174,9 @@ void LevelSubset::save()
   filename = "/levels/" + name + "/";
 
   fcreatedir(filename.c_str());
-  filename = string(st_dir) + "/levels/" + name + "/info";
+  filename = string(Globals::st_dir) + "/levels/" + name + "/info";
   if(!fwriteable(filename.c_str()))
-    filename = datadir + "/levels/" + name + "/info";
+    filename = Globals::datadir + "/levels/" + name + "/info";
   if(fwriteable(filename.c_str()))
     {
       fi = fopen(filename.c_str(), "w");
@@ -274,9 +274,9 @@ Level::load(const std::string& subset, int level)
   char filename[1024];
 
   // Load data file:
-  snprintf(filename, 1024, "%s/levels/%s/level%d.stl", st_dir, subset.c_str(), level);
+  snprintf(filename, 1024, "%s/levels/%s/level%d.stl", Globals::st_dir, subset.c_str(), level);
   if(!faccessible(filename))
-    snprintf(filename, 1024, "%s/levels/%s/level%d.stl", datadir.c_str(), subset.c_str(), level);
+    snprintf(filename, 1024, "%s/levels/%s/level%d.stl", Globals::datadir.c_str(), subset.c_str(), level);
 
   return load(filename);
 }
@@ -549,10 +549,10 @@ Level::save(const std::string& subset, int level)
   /* Save data file: */
   sprintf(str, "/levels/%s/", subset.c_str());
   fcreatedir(str);
-  snprintf(filename, 1024, "%s/levels/%s/level%d.stl", st_dir, subset.c_str(),
+  snprintf(filename, 1024, "%s/levels/%s/level%d.stl", Globals::st_dir, subset.c_str(),
       level);
   if(!fwriteable(filename))
-    snprintf(filename, 1024, "%s/levels/%s/level%d.stl", datadir.c_str(),
+    snprintf(filename, 1024, "%s/levels/%s/level%d.stl", Globals::datadir.c_str(),
         subset.c_str(), level);
 
   FILE * fi = fopen(filename, "w");
@@ -667,9 +667,9 @@ Level::load_gfx()
   if(!bkgd_image.empty())
     {
       char fname[1024];
-      snprintf(fname, 1024, "%s/background/%s", st_dir, bkgd_image.c_str());
+      snprintf(fname, 1024, "%s/background/%s", Globals::st_dir, bkgd_image.c_str());
       if(!faccessible(fname))
-        snprintf(fname, 1024, "%s/images/background/%s", datadir.c_str(), bkgd_image.c_str());
+        snprintf(fname, 1024, "%s/images/background/%s", Globals::datadir.c_str(), bkgd_image.c_str());
       delete img_bkgd;
       img_bkgd = new Surface(fname, IGNORE_ALPHA);
     }
@@ -685,9 +685,9 @@ void Level::load_image(Surface** ptexture, string theme,const  char * file, int 
 {
   char fname[1024];
 
-  snprintf(fname, 1024, "%s/themes/%s/%s", st_dir, theme.c_str(), file);
+  snprintf(fname, 1024, "%s/themes/%s/%s", Globals::st_dir, theme.c_str(), file);
   if(!faccessible(fname))
-    snprintf(fname, 1024, "%s/images/themes/%s/%s", datadir.c_str(), theme.c_str(), file);
+    snprintf(fname, 1024, "%s/images/themes/%s/%s", Globals::datadir.c_str(), theme.c_str(), file);
 
   *ptexture = new Surface(fname, use_alpha);
 }
@@ -739,13 +739,13 @@ Level::load_song()
   char* song_path;
   char* song_subtitle;
 
-  level_song = music_manager->load_music(datadir + "/music/" + song_title);
+  level_song = music_manager->load_music(Globals::datadir + "/music/" + song_title);
 
-  song_path = (char *) malloc(sizeof(char) * datadir.length() +
+  song_path = (char *) malloc(sizeof(char) * Globals::datadir.length() +
                               strlen(song_title.c_str()) + 8 + 5);
   song_subtitle = strdup(song_title.c_str());
   strcpy(strstr(song_subtitle, "."), "\0");
-  sprintf(song_path, "%s/music/%s-fast%s", datadir.c_str(), 
+  sprintf(song_path, "%s/music/%s-fast%s", Globals::datadir.c_str(), 
           song_subtitle, strstr(song_title.c_str(), "."));
   if(!music_manager->exists_music(song_path)) {
     level_song_fast = level_song;

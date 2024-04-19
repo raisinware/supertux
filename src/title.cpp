@@ -156,7 +156,7 @@ void check_contrib_menu()
       std::string savegame = worldmap_list.item[index - contrib_subsets.size()];
       // remove .stwm...
       savegame = savegame.substr(0, savegame.size()-5);
-      savegame = std::string(st_save_dir) + "/" + savegame + ".stsg";
+      savegame = std::string(Globals::st_save_dir) + "/" + savegame + ".stsg";
       std::cout << "SaveGameName: " << savegame << "\n";
       worldmap.loadgame(savegame.c_str());
 
@@ -248,15 +248,15 @@ void title(void)
 
   st_pause_ticks_init();
 
-  GameSession session(datadir + "/levels/misc/menu.stl", 0, ST_GL_DEMO_GAME);
+  GameSession session(Globals::datadir + "/levels/misc/menu.stl", 0, ST_GL_DEMO_GAME);
 
   clearscreen(0, 0, 0);
   updatescreen();
 
   /* Load images: */
-  bkg_title = new Surface(datadir + "/images/title/background.jpg", IGNORE_ALPHA);
-  logo = new Surface(datadir + "/images/title/logo.png", USE_ALPHA);
-  img_choose_subset = new Surface(datadir + "/images/status/choose-level-subset.png", USE_ALPHA);
+  bkg_title = new Surface(Globals::datadir + "/images/title/background.jpg", IGNORE_ALPHA);
+  logo = new Surface(Globals::datadir + "/images/title/logo.png", USE_ALPHA);
+  img_choose_subset = new Surface(Globals::datadir + "/images/status/choose-level-subset.png", USE_ALPHA);
 
   /* Generating contrib maps by only using a string_list */
   // Since there isn't any world dir or anything, add a hardcoded entry for Bonus Island
@@ -313,14 +313,14 @@ void title(void)
 
 	
 #ifndef RES320X240
-      white_small_text->draw(" SuperTux " VERSION "\n"
+      Globals::white_small_text->draw(" SuperTux " VERSION "\n"
                              "Copyright (c) 2003 SuperTux Devel Team\n"
                              "This game comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
                              "are welcome to redistribute it under certain conditions; see the file COPYING\n"
                              "for details.\n",
                              0, 420, 0);
 #else
-      white_small_text->draw(" SuperTux " VERSION "\n"
+      Globals::white_small_text->draw(" SuperTux " VERSION "\n"
                              "Copyright (c) 2003 SuperTux Devel Team\n"
                              "This game comes with ABSOLUTELY NO \n"
 			     "WARRANTY. This is free software, and\n"
@@ -363,14 +363,14 @@ void title(void)
                 case MNID_CREDITS:
 #ifndef NOSOUND
                   music_manager = new MusicManager();
-                  menu_song  = music_manager->load_music(datadir + "/music/credits.ogg");
+                  menu_song  = music_manager->load_music(Globals::datadir + "/music/credits.ogg");
                   music_manager->halt_music();
                   music_manager->play_music(menu_song,0);
 #endif
                   display_text_file("CREDITS", bkg_title, SCROLL_SPEED_CREDITS);
 #ifndef NOSOUND
                   music_manager->halt_music();
-                  menu_song = music_manager->load_music(datadir + "/music/theme.ogg");
+                  menu_song = music_manager->load_music(Globals::datadir + "/music/theme.ogg");
                   music_manager->play_music(menu_song);
 #endif
                   Menu::set_current(main_menu);
@@ -396,7 +396,7 @@ void title(void)
 
                 if(confirm_dialog(str))
                   {
-                  sprintf(str,"%s/slot%d.stsg", st_save_dir, slot);
+                  sprintf(str,"%s/slot%d.stsg", Globals::st_save_dir, slot);
                   printf("Removing: %s\n",str);
                   remove(str);
                   }
@@ -424,7 +424,7 @@ void title(void)
             }
         }
 
-      mouse_cursor->draw();
+      Globals::mouse_cursor->draw();
       
       flipscreen();
 

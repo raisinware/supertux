@@ -113,10 +113,10 @@ int fwriteable(const char *filename)
 int fcreatedir(const char* relative_dir)
 {
   char path[1024];
-  snprintf(path, 1024, "%s/%s/", st_dir, relative_dir);
+  snprintf(path, 1024, "%s/%s/", Globals::st_dir, relative_dir);
   if(mkdir(path,0755) != 0)
     {
-      snprintf(path, 1024, "%s/%s/", datadir.c_str(), relative_dir);
+      snprintf(path, 1024, "%s/%s/", Globals::datadir.c_str(), relative_dir);
       if(mkdir(path,0755) != 0)
         {
           return false;
@@ -137,10 +137,10 @@ FILE * opendata(const char * rel_filename, const char * mode)
   char * filename = NULL;
   FILE * fi;
 
-  filename = (char *) malloc(sizeof(char) * (strlen(st_dir) +
+  filename = (char *) malloc(sizeof(char) * (strlen(Globals::st_dir) +
                                              strlen(rel_filename) + 1));
 
-  strcpy(filename, st_dir);
+  strcpy(filename, Globals::st_dir);
   /* Open the high score file: */
 
   strcat(filename, rel_filename);
@@ -174,7 +174,7 @@ string_list_type dsubdirs(const char *rel_path,const  char* expected_file)
   char path[1024];
 
   string_list_init(&sdirs);
-  sprintf(path,"%s/%s",st_dir,rel_path);
+  sprintf(path,"%s/%s",Globals::st_dir,rel_path);
   if((dirStructP = opendir(path)) != NULL)
     {
       while((direntp = readdir(dirStructP)) != NULL)
@@ -199,7 +199,7 @@ string_list_type dsubdirs(const char *rel_path,const  char* expected_file)
       closedir(dirStructP);
     }
 
-  sprintf(path,"%s/%s",datadir.c_str(),rel_path);
+  sprintf(path,"%s/%s",Globals::datadir.c_str(),rel_path);
   if((dirStructP = opendir(path)) != NULL)
     {
       while((direntp = readdir(dirStructP)) != NULL)
@@ -220,7 +220,7 @@ string_list_type dsubdirs(const char *rel_path,const  char* expected_file)
                     }
                   else
                     {
-                      sprintf(filename,"%s/%s/%s/%s",st_dir,rel_path,direntp->d_name,expected_file);
+                      sprintf(filename,"%s/%s/%s/%s",Globals::st_dir,rel_path,direntp->d_name,expected_file);
                       if(faccessible(filename))
                         continue;
                     }
@@ -243,7 +243,7 @@ string_list_type dfiles(const char *rel_path, const  char* glob, const  char* ex
   char path[1024];
 
   string_list_init(&sdirs);
-  sprintf(path,"%s/%s",st_dir,rel_path);
+  sprintf(path,"%s/%s",Globals::st_dir,rel_path);
   if((dirStructP = opendir(path)) != NULL)
     {
       while((direntp = readdir(dirStructP)) != NULL)
@@ -270,7 +270,7 @@ string_list_type dfiles(const char *rel_path, const  char* glob, const  char* ex
       closedir(dirStructP);
     }
 
-  sprintf(path,"%s/%s",datadir.c_str(),rel_path);
+  sprintf(path,"%s/%s",Globals::datadir.c_str(),rel_path);
   if((dirStructP = opendir(path)) != NULL)
     {
       while((direntp = readdir(dirStructP)) != NULL)
@@ -332,60 +332,60 @@ void st_directory_setup(void)
   }
 #endif
 
-  st_dir = (char *) malloc(sizeof(char) * (config_home.size() +
+  Globals::st_dir = (char *) malloc(sizeof(char) * (config_home.size() +
                                            strlen("/supertux-milestone1") + 1));
-  strcpy(st_dir, config_home.c_str());
-  strcat(st_dir, "/supertux-milestone1");
+  strcpy(Globals::st_dir, config_home.c_str());
+  strcat(Globals::st_dir, "/supertux-milestone1");
 
-  st_save_dir = (char *) malloc(sizeof(char) * (strlen(st_dir) + strlen("/save") + 1));
+  Globals::st_save_dir = (char *) malloc(sizeof(char) * (strlen(Globals::st_dir) + strlen("/save") + 1));
 
-  strcpy(st_save_dir,st_dir);
-  strcat(st_save_dir,"/save");
+  strcpy(Globals::st_save_dir,Globals::st_dir);
+  strcat(Globals::st_save_dir,"/save");
 
   /* Create them. In the case they exist they won't destroy anything. */
-  mkdir(st_dir, 0755);
-  mkdir(st_save_dir, 0755);
+  mkdir(Globals::st_dir, 0755);
+  mkdir(Globals::st_save_dir, 0755);
 
   char str[1024];
-  sprintf(str, "%s/levels", st_dir);
+  sprintf(str, "%s/levels", Globals::st_dir);
   mkdir(str, 0755);
 
-  // User has not that a datadir, so we try some magic
-  if (datadir.empty())
+  // User has not that a Globals::datadir, so we try some magic
+  if (Globals::datadir.empty())
     {
-      // Detect datadir
+      // Detect Globals::datadir
       char exe_file[PATH_MAX];
 #ifndef WIN32
       if (readlink("/proc/self/exe", exe_file, PATH_MAX) < 0)
         {
           puts("Couldn't read /proc/self/exe, using default path: " DATA_PREFIX);
-          datadir = DATA_PREFIX;
+          Globals::datadir = DATA_PREFIX;
         }
       else
         {
           std::string exedir = std::string(dirname(exe_file)) + "/";
           
-          datadir = exedir + "../data"; // SuperTux run from source dir
-          if (access(datadir.c_str(), F_OK) != 0)
+          Globals::datadir = exedir + "../data"; // SuperTux run from source dir
+          if (access(Globals::datadir.c_str(), F_OK) != 0)
             {
-              datadir = exedir + "../share/supertux-milestone1"; // SuperTux run from PATH
-              if (access(datadir.c_str(), F_OK) != 0) 
+              Globals::datadir = exedir + "../share/supertux-milestone1"; // SuperTux run from PATH
+              if (access(Globals::datadir.c_str(), F_OK) != 0) 
                 { // If all fails, fall back to compiled path
-        	  datadir = exedir + "./data"; // SuperTux run with data in same path as executable
-        	    if (access(datadir.c_str(), F_OK) != 0)
+        	  Globals::datadir = exedir + "./data"; // SuperTux run with data in same path as executable
+        	    if (access(Globals::datadir.c_str(), F_OK) != 0)
         	    {
 			 // If all fails, fall back to compiled path
-                	datadir = DATA_PREFIX; 
+                	Globals::datadir = DATA_PREFIX; 
 		    }
                 }
             }
         }
 #else
-  datadir = DATA_PREFIX;
+  Globals::datadir = DATA_PREFIX;
 #endif
     }
-  printf("Configdir: %s\n", st_dir);
-  printf("Datadir: %s\n", datadir.c_str());
+  printf("Configdir: %s\n", Globals::st_dir);
+  printf("Globals::datadir: %s\n", Globals::datadir.c_str());
 }
 
 /* Create and setup menus. */
@@ -405,7 +405,7 @@ void st_menu(void)
   contrib_subset_menu   = new Menu();
   worldmap_menu  = new Menu();
 
-  main_menu->set_pos(screen->w/2, (int)(335)+20);
+  main_menu->set_pos(Globals::screen->w/2, (int)(335)+20);
   main_menu->additem(MN_GOTO, "Start Game",0,load_game_menu, MNID_STARTGAME);
   main_menu->additem(MN_GOTO, "Bonus Levels",0,contrib_menu, MNID_CONTRIB);
   main_menu->additem(MN_GOTO, "Options",0,options_menu, MNID_OPTIONMENU);
@@ -416,8 +416,8 @@ void st_menu(void)
 
   options_menu->additem(MN_LABEL,"Options",0,0);
   options_menu->additem(MN_HL,"",0,0);
-  options_menu->additem(MN_DEACTIVE,"OpenGL (not supported)",use_gl, 0, MNID_OPENGL);
-  options_menu->additem(MN_TOGGLE,"Fullscreen",use_fullscreen,0, MNID_FULLSCREEN);
+  //options_menu->additem(MN_DEACTIVE,"OpenGL (not supported)",use_gl, 0, MNID_OPENGL);
+  options_menu->additem(MN_TOGGLE,"Fullscreen",Globals::use_fullscreen,0, MNID_FULLSCREEN);
 #ifndef NOSOUND
   if(audio_device)
     {
@@ -433,10 +433,10 @@ void st_menu(void)
 #ifdef TSCONTROL
   options_menu->additem(MN_TOGGLE,"Show Mouse",show_mouse,0, MNID_SHOWMOUSE);
 #endif
-  options_menu->additem(MN_TOGGLE,"Show FPS  ",show_fps,0, MNID_SHOWFPS);
+  options_menu->additem(MN_TOGGLE,"Show FPS  ",Globals::show_fps,0, MNID_SHOWFPS);
   options_menu->additem(MN_GOTO,"Keyboard Setup",0,options_keys_menu);
 
-  //if(use_joystick)
+  //if(Globals::use_joystick)
 
   options_menu->additem(MN_HL,"",0,0);
   options_menu->additem(MN_BACK,"Back",0,0);
@@ -451,16 +451,16 @@ void st_menu(void)
   options_keys_menu->additem(MN_HL,"",0,0);
   options_keys_menu->additem(MN_BACK,"Back",0,0);
 
-  if(use_joystick)
+  if(Globals::use_joystick)
     {
     options_joystick_menu->additem(MN_LABEL,"Joystick Setup",0,0);
     options_joystick_menu->additem(MN_HL,"",0,0);
-    options_joystick_menu->additem(MN_CONTROLFIELD,"X axis", 0,0, 0,&joystick_keymap.x_axis);
-    options_joystick_menu->additem(MN_CONTROLFIELD,"Y axis", 0,0, 0,&joystick_keymap.y_axis);
-    options_joystick_menu->additem(MN_CONTROLFIELD,"A button", 0,0, 0,&joystick_keymap.a_button);
-    options_joystick_menu->additem(MN_CONTROLFIELD,"B button", 0,0, 0,&joystick_keymap.b_button);
-    options_joystick_menu->additem(MN_CONTROLFIELD,"Start", 0,0, 0,&joystick_keymap.start_button);
-    options_joystick_menu->additem(MN_CONTROLFIELD,"DeadZone", 0,0, 0,&joystick_keymap.dead_zone);
+    options_joystick_menu->additem(MN_CONTROLFIELD,"X axis", 0,0, 0,&Globals::joystick_keymap.x_axis);
+    options_joystick_menu->additem(MN_CONTROLFIELD,"Y axis", 0,0, 0,&Globals::joystick_keymap.y_axis);
+    options_joystick_menu->additem(MN_CONTROLFIELD,"A button", 0,0, 0,&Globals::joystick_keymap.a_button);
+    options_joystick_menu->additem(MN_CONTROLFIELD,"B button", 0,0, 0,&Globals::joystick_keymap.b_button);
+    options_joystick_menu->additem(MN_CONTROLFIELD,"Start", 0,0, 0,&Globals::joystick_keymap.start_button);
+    options_joystick_menu->additem(MN_CONTROLFIELD,"DeadZone", 0,0, 0,&Globals::joystick_keymap.dead_zone);
     options_joystick_menu->additem(MN_HL,"",0,0);
     options_joystick_menu->additem(MN_BACK,"Back",0,0);
     }
@@ -522,7 +522,7 @@ bool process_load_game_menu()
   if(slot != -1 && load_game_menu->get_item_by_id(slot).kind == MN_ACTION)
     {
       char slotfile[1024];
-      snprintf(slotfile, 1024, "%s/slot%d.stsg", st_save_dir, slot);
+      snprintf(slotfile, 1024, "%s/slot%d.stsg", Globals::st_save_dir, slot);
 
       if (access(slotfile, F_OK) != 0)
         {
@@ -561,9 +561,9 @@ void process_options_menu(void)
       options_menu->get_item_by_id(MNID_OPENGL).toggled = false;
       break;
     case MNID_FULLSCREEN:
-      if(use_fullscreen != options_menu->isToggled(MNID_FULLSCREEN))
+      if(Globals::use_fullscreen != options_menu->isToggled(MNID_FULLSCREEN))
         {
-          use_fullscreen = !use_fullscreen;
+          Globals::use_fullscreen = !Globals::use_fullscreen;
           st_video_setup();
         }
       break;
@@ -587,8 +587,8 @@ void process_options_menu(void)
 	  break;
 #endif
     case MNID_SHOWFPS:
-      if(show_fps != options_menu->isToggled(MNID_SHOWFPS))
-        show_fps = !show_fps;
+      if(Globals::show_fps != options_menu->isToggled(MNID_SHOWFPS))
+        Globals::show_fps = !Globals::show_fps;
       break;
     }
 }
@@ -606,46 +606,46 @@ void st_general_setup(void)
   /* Load global images: */
 
 #ifndef RES320X240
-  white_text  = new Text(datadir + "/images/status/letters-white.png", TEXT_TEXT, 16,18);
+  Globals::white_text  = new Text(Globals::datadir + "/images/status/letters-white.png", TEXT_TEXT, 16,18);
 #else
-  white_text  = new Text(datadir + "/images/status/letters-white-small.png", TEXT_TEXT, 8,9);
+  Globals::white_text  = new Text(Globals::datadir + "/images/status/letters-white-small.png", TEXT_TEXT, 8,9);
   fadeout();
 #endif
 
 
 #ifndef RES320X240
-  black_text  = new Text(datadir + "/images/status/letters-black.png", TEXT_TEXT, 16,18);
+  Globals::black_text  = new Text(Globals::datadir + "/images/status/letters-black.png", TEXT_TEXT, 16,18);
 #else
-  black_text  = new Text(datadir + "/images/status/letters-black-small.png", TEXT_TEXT, 8,9);
+  Globals::black_text  = new Text(Globals::datadir + "/images/status/letters-black-small.png", TEXT_TEXT, 8,9);
 #endif
 #ifndef RES320X240
-  gold_text   = new Text(datadir + "/images/status/letters-gold.png", TEXT_TEXT, 16,18);
+  Globals::gold_text   = new Text(Globals::datadir + "/images/status/letters-gold.png", TEXT_TEXT, 16,18);
 #else
-  gold_text   = new Text(datadir + "/images/status/letters-gold-small.png", TEXT_TEXT, 8,9);
+  Globals::gold_text   = new Text(Globals::datadir + "/images/status/letters-gold-small.png", TEXT_TEXT, 8,9);
 #endif
-  silver_text = new Text(datadir + "/images/status/letters-silver.png", TEXT_TEXT, 16,18);
+  Globals::silver_text = new Text(Globals::datadir + "/images/status/letters-silver.png", TEXT_TEXT, 16,18);
 #ifndef RES320X240
-  blue_text   = new Text(datadir + "/images/status/letters-blue.png", TEXT_TEXT, 16,18);
+  Globals::blue_text   = new Text(Globals::datadir + "/images/status/letters-blue.png", TEXT_TEXT, 16,18);
 #else
-  blue_text   = new Text(datadir + "/images/status/letters-blue-small.png", TEXT_TEXT, 8,9);
+  Globals::blue_text   = new Text(Globals::datadir + "/images/status/letters-blue-small.png", TEXT_TEXT, 8,9);
 #endif
-  red_text    = new Text(datadir + "/images/status/letters-red.png", TEXT_TEXT, 16,18);
-  green_text  = new Text(datadir + "/images/status/letters-green.png", TEXT_TEXT, 16,18);
-  white_text  = new Text(datadir + "/images/status/letters-white.png", TEXT_TEXT, 16,18);
-  white_small_text = new Text(datadir + "/images/status/letters-white-small.png", TEXT_TEXT, 8,9);
-  white_big_text   = new Text(datadir + "/images/status/letters-white-big.png", TEXT_TEXT, 20,22);
-  yellow_nums = new Text(datadir + "/images/status/numbers.png", TEXT_NUM, 32,32);
+  Globals::red_text    = new Text(Globals::datadir + "/images/status/letters-red.png", TEXT_TEXT, 16,18);
+  Globals::green_text  = new Text(Globals::datadir + "/images/status/letters-green.png", TEXT_TEXT, 16,18);
+  Globals::white_text  = new Text(Globals::datadir + "/images/status/letters-white.png", TEXT_TEXT, 16,18);
+  Globals::white_small_text = new Text(Globals::datadir + "/images/status/letters-white-small.png", TEXT_TEXT, 8,9);
+  Globals::white_big_text   = new Text(Globals::datadir + "/images/status/letters-white-big.png", TEXT_TEXT, 20,22);
+  Globals::yellow_nums = new Text(Globals::datadir + "/images/status/numbers.png", TEXT_NUM, 32,32);
 
   /* Load GUI/menu images: */
-  checkbox = new Surface(datadir + "/images/status/checkbox.png", USE_ALPHA);
-  checkbox_checked = new Surface(datadir + "/images/status/checkbox-checked.png", USE_ALPHA);
-  back = new Surface(datadir + "/images/status/back.png", USE_ALPHA);
-  arrow_left = new Surface(datadir + "/images/icons/left.png", USE_ALPHA);
-  arrow_right = new Surface(datadir + "/images/icons/right.png", USE_ALPHA);
+  checkbox = new Surface(Globals::datadir + "/images/status/checkbox.png", USE_ALPHA);
+  checkbox_checked = new Surface(Globals::datadir + "/images/status/checkbox-checked.png", USE_ALPHA);
+  back = new Surface(Globals::datadir + "/images/status/back.png", USE_ALPHA);
+  arrow_left = new Surface(Globals::datadir + "/images/icons/left.png", USE_ALPHA);
+  arrow_right = new Surface(Globals::datadir + "/images/icons/right.png", USE_ALPHA);
 
   /* Load the mouse-cursor */
-  mouse_cursor = new MouseCursor( datadir + "/images/status/mousecursor.png",1);
-  MouseCursor::set_current(mouse_cursor);
+  Globals::mouse_cursor = new MouseCursor( Globals::datadir + "/images/status/mousecursor.png",1);
+  MouseCursor::set_current(Globals::mouse_cursor);
   
 }
 
@@ -653,16 +653,16 @@ void st_general_free(void)
 {
 
   /* Free global images: */
-  delete black_text;
-  delete gold_text;
-  delete silver_text;
-  delete white_text;
-  delete blue_text;
-  delete red_text;
-  delete green_text;
-  delete white_small_text;
-  delete white_big_text;
-  delete yellow_nums;
+  delete Globals::black_text;
+  delete Globals::gold_text;
+  delete Globals::silver_text;
+  delete Globals::white_text;
+  delete Globals::blue_text;
+  delete Globals::red_text;
+  delete Globals::green_text;
+  delete Globals::white_small_text;
+  delete Globals::white_big_text;
+  delete Globals::yellow_nums;
 
   /* Free GUI/menu images: */
   delete checkbox;
@@ -672,7 +672,7 @@ void st_general_free(void)
   delete arrow_right;
 
   /* Free mouse-cursor */
-  delete mouse_cursor;
+  delete Globals::mouse_cursor;
   
   /* Free menus */
   delete worldmap_menu;
@@ -704,10 +704,7 @@ void st_video_setup(void)
     }
 
   /* Open display: */
-  if(use_gl)
-    st_video_setup_gl();
-  else
-    st_video_setup_sdl();
+  st_video_setup_sdl();
 
   Surface::reload_all();
 
@@ -717,27 +714,27 @@ void st_video_setup(void)
 
 void st_video_setup_sdl(void)
 {
-  if (use_fullscreen)
+  if (Globals::use_fullscreen)
     {
-      window = SDL_CreateWindow("SuperTux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, SDL_WINDOW_FULLSCREEN);
-      screen = SDL_GetWindowSurface(window);
+      Globals::window = SDL_CreateWindow("SuperTux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, SDL_WINDOW_FULLSCREEN);
+      Globals::screen = SDL_GetWindowSurface(Globals::window);
 
-      if (screen == NULL)
+      if (Globals::screen == NULL)
         {
           fprintf(stderr,
                   "\nWarning: I could not set up fullscreen video for "
                   "640x480 mode.\n"
                   "The Simple DirectMedia error that occured was:\n"
                   "%s\n\n", SDL_GetError());
-          use_fullscreen = false;
+          Globals::use_fullscreen = false;
         }
     }
   else
     {
-      window = SDL_CreateWindow("SuperTux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, 0);
-      screen = SDL_GetWindowSurface(window);
+      Globals::window = SDL_CreateWindow("SuperTux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, 0);
+      Globals::screen = SDL_GetWindowSurface(Globals::window);
 
-      if (screen == NULL)
+      if (Globals::screen == NULL)
         {
           fprintf(stderr,
                   "\nError: I could not set up video for 640x480 mode.\n"
@@ -758,7 +755,7 @@ void st_joystick_setup(void)
 
   /* Init Joystick: */
 
-  use_joystick = true;
+  Globals::use_joystick = true;
 
   if (SDL_Init(SDL_INIT_JOYSTICK) < 0)
     {
@@ -766,7 +763,7 @@ void st_joystick_setup(void)
               "The Simple DirectMedia error that occured was:\n"
               "%s\n\n", SDL_GetError());
 
-      use_joystick = false;
+      Globals::use_joystick = false;
     }
   else
     {
@@ -775,38 +772,38 @@ void st_joystick_setup(void)
         {
           fprintf(stderr, "Warning: No joysticks are available.\n");
 
-          use_joystick = false;
+          Globals::use_joystick = false;
         }
       else
         {
-          js = SDL_JoystickOpen(joystick_num);
+          Globals::js = SDL_JoystickOpen(Globals::joystick_num);
 
-          if (js == NULL)
+          if (Globals::js == NULL)
             {
               fprintf(stderr, "Warning: Could not open joystick %d.\n"
                       "The Simple DirectMedia error that occured was:\n"
-                      "%s\n\n", joystick_num, SDL_GetError());
+                      "%s\n\n", Globals::joystick_num, SDL_GetError());
 
-              use_joystick = false;
+              Globals::use_joystick = false;
             }
           else
             {
-              if (SDL_JoystickNumAxes(js) < 2)
+              if (SDL_JoystickNumAxes(Globals::js) < 2)
                 {
                   fprintf(stderr,
                           "Warning: Joystick does not have enough axes!\n");
 
-                  use_joystick = false;
+                  Globals::use_joystick = false;
                 }
               else
                 {
-                  if (SDL_JoystickNumButtons(js) < 2)
+                  if (SDL_JoystickNumButtons(Globals::js) < 2)
                     {
                       fprintf(stderr,
                               "Warning: "
                               "Joystick does not have enough buttons!\n");
 
-                      use_joystick = false;
+                      Globals::use_joystick = false;
                     }
                 }
             }
@@ -904,13 +901,13 @@ void seticon(void)
 
   /* Load icon into a surface: */
 
-  icon = IMG_Load((datadir + "/images/icon.png").c_str());
+  icon = IMG_Load((Globals::datadir + "/images/icon.png").c_str());
   if (icon == NULL)
     {
       fprintf(stderr,
               "\nError: I could not load the icon image: %s%s\n"
               "The Simple DirectMedia error that occured was:\n"
-              "%s\n\n", datadir.c_str(), "/images/icon.png", SDL_GetError());
+              "%s\n\n", Globals::datadir.c_str(), "/images/icon.png", SDL_GetError());
       exit(1);
     }
 
@@ -951,58 +948,58 @@ void parseargs(int argc, char * argv[])
         {
           /* Use full screen: */
 
-          use_fullscreen = true;
+          Globals::use_fullscreen = true;
         }
       else if (strcmp(argv[i], "--window") == 0 ||
                strcmp(argv[i], "-w") == 0)
         {
           /* Use window mode: */
 
-          use_fullscreen = false;
+          Globals::use_fullscreen = false;
         }      
       else if (strcmp(argv[i], "--joystick") == 0 || strcmp(argv[i], "-j") == 0)
         {
           assert(i+1 < argc);
-          joystick_num = atoi(argv[++i]);
+          Globals::joystick_num = atoi(argv[++i]);
         }
       else if (strcmp(argv[i], "--joymap") == 0)
         {
           assert(i+1 < argc);
           if (sscanf(argv[++i],
                      "%d:%d:%d:%d:%d", 
-                     &joystick_keymap.x_axis, 
-                     &joystick_keymap.y_axis, 
-                     &joystick_keymap.a_button, 
-                     &joystick_keymap.b_button, 
-                     &joystick_keymap.start_button) != 5)
+                     &Globals::joystick_keymap.x_axis, 
+                     &Globals::joystick_keymap.y_axis, 
+                     &Globals::joystick_keymap.a_button, 
+                     &Globals::joystick_keymap.b_button, 
+                     &Globals::joystick_keymap.start_button) != 5)
             {
               puts("Warning: Invalid or incomplete joymap, should be: 'XAXIS:YAXIS:A:B:START'");
             }
           else
             {
               std::cout << "Using new joymap:\n"
-                        << "  X-Axis:       " << joystick_keymap.x_axis << "\n"
-                        << "  Y-Axis:       " << joystick_keymap.y_axis << "\n"
-                        << "  A-Button:     " << joystick_keymap.a_button << "\n"
-                        << "  B-Button:     " << joystick_keymap.b_button << "\n"
-                        << "  Start-Button: " << joystick_keymap.start_button << std::endl;
+                        << "  X-Axis:       " << Globals::joystick_keymap.x_axis << "\n"
+                        << "  Y-Axis:       " << Globals::joystick_keymap.y_axis << "\n"
+                        << "  A-Button:     " << Globals::joystick_keymap.a_button << "\n"
+                        << "  B-Button:     " << Globals::joystick_keymap.b_button << "\n"
+                        << "  Start-Button: " << Globals::joystick_keymap.start_button << std::endl;
             }
         }
       else if (strcmp(argv[i], "--leveleditor") == 0)
         {
-          launch_leveleditor_mode = true;
+          Globals::launch_leveleditor_mode = true;
         }
-      else if (strcmp(argv[i], "--datadir") == 0 
+      else if (strcmp(argv[i], "--Globals::datadir") == 0 
                || strcmp(argv[i], "-d") == 0 )
         {
           assert(i+1 < argc);
-          datadir = argv[++i];
+          Globals::datadir = argv[++i];
         }
       else if (strcmp(argv[i], "--show-fps") == 0)
         {
           /* Use full screen: */
 
-          show_fps = true;
+          Globals::show_fps = true;
         }
       else if (strcmp(argv[i], "--opengl") == 0 ||
                strcmp(argv[i], "-gl") == 0)
@@ -1010,7 +1007,7 @@ void parseargs(int argc, char * argv[])
         }
       else if (strcmp(argv[i], "--sdl") == 0)
           {
-            use_gl = false;
+            //use_gl = false;
           }
       else if (strcmp(argv[i], "--usage") == 0)
         {
@@ -1042,7 +1039,7 @@ void parseargs(int argc, char * argv[])
       else if (strcmp(argv[i], "--debug-mode") == 0)
         {
           /* Enable the debug-mode */
-          debug_mode = true;
+          Globals::debug_mode = true;
 
         }
       else if (strcmp(argv[i], "--help") == 0)
@@ -1078,7 +1075,7 @@ void parseargs(int argc, char * argv[])
         }
       else if (argv[i][0] != '-')
         {
-          level_startup_file = argv[i];
+          Globals::level_startup_file = argv[i];
         }
       else
         {

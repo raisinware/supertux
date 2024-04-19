@@ -112,7 +112,7 @@ bool confirm_dialog(std::string text)
       break;
     }
 
-    mouse_cursor->draw();
+    Globals::mouse_cursor->draw();
     flipscreen();
     SDL_Delay(25);
   }
@@ -316,8 +316,8 @@ Menu::Menu()
   delete_character = 0;
   mn_input_char = '\0';
 
-  pos_x        = screen->w/2;
-  pos_y        = screen->h/2;
+  pos_x        = Globals::screen->w/2;
+  pos_y        = Globals::screen->h/2;
   arrange_left = 0;
   active_item  = 0;
   effect.init(false);
@@ -525,7 +525,7 @@ Menu::draw_item(int index, // Position of the current item in the menu
   int text_width  = strlen(pitem.text) * font_width;
   int input_width = (strlen(pitem.input)+ 1) * font_width;
   int list_width  = strlen(string_list_active(pitem.list)) * font_width;
-  Text* text_font = white_text;
+  Text* text_font = Globals::white_text;
 
   if (arrange_left)
     x_pos += (int)(24) - menu_width/2 + (text_width + input_width + list_width)/2;
@@ -533,14 +533,14 @@ Menu::draw_item(int index, // Position of the current item in the menu
   if(index == active_item)
   {
     shadow_size = 3;
-    text_font = blue_text;
+    text_font = Globals::blue_text;
   }
 
   switch (pitem.kind)
   {
   case MN_DEACTIVE:
     {
-      black_text->draw_align(pitem.text,
+      Globals::black_text->draw_align(pitem.text,
                              x_pos, y_pos,
                              A_HMIDDLE, A_VMIDDLE, 2);
       break;
@@ -566,11 +566,11 @@ Menu::draw_item(int index, // Position of the current item in the menu
   case MN_LABEL:
     {
 #ifndef RES320X240
-      white_big_text->draw_align(pitem.text,
+      Globals::white_big_text->draw_align(pitem.text,
                                  x_pos, y_pos,
                                  A_HMIDDLE, A_VMIDDLE, 2);
 #else
-      white_text->draw_align(pitem.text,
+      Globals::white_text->draw_align(pitem.text,
                                  x_pos, y_pos,
                                  A_HMIDDLE, A_VMIDDLE, 2);
 #endif
@@ -597,12 +597,12 @@ Menu::draw_item(int index, // Position of the current item in the menu
       if(pitem.kind == MN_TEXTFIELD || pitem.kind == MN_NUMFIELD)
       {
         if(active_item == index)
-          gold_text->draw_align((pitem.get_input_with_symbol(true)).c_str(), x_pos + text_pos, y_pos, A_HMIDDLE, A_VMIDDLE, 2);
+          Globals::gold_text->draw_align((pitem.get_input_with_symbol(true)).c_str(), x_pos + text_pos, y_pos, A_HMIDDLE, A_VMIDDLE, 2);
         else
-          gold_text->draw_align((pitem.get_input_with_symbol(false)).c_str(), x_pos + text_pos, y_pos, A_HMIDDLE, A_VMIDDLE, 2);
+          Globals::gold_text->draw_align((pitem.get_input_with_symbol(false)).c_str(), x_pos + text_pos, y_pos, A_HMIDDLE, A_VMIDDLE, 2);
       }
       else
-        gold_text->draw_align(pitem.input,
+        Globals::gold_text->draw_align(pitem.input,
                               x_pos + text_pos, y_pos,
                               A_HMIDDLE, A_VMIDDLE, 2);
 
@@ -629,7 +629,7 @@ Menu::draw_item(int index, // Position of the current item in the menu
                list_pos_2, 18,
                0,0,0,128);
 
-      gold_text->draw_align(string_list_active(pitem.list),
+      Globals::gold_text->draw_align(string_list_active(pitem.list),
                             x_pos + text_pos, y_pos,
                             A_HMIDDLE, A_VMIDDLE,2);
 
@@ -837,7 +837,7 @@ Menu::event(SDL_Event& event)
        break;
        
   case  SDL_JOYAXISMOTION:
-    if(event.jaxis.axis == joystick_keymap.y_axis)
+    if(event.jaxis.axis == Globals::joystick_keymap.y_axis)
     {
       if (event.jaxis.value > 1024)
         menuaction = MENU_ACTION_DOWN;
@@ -870,11 +870,11 @@ Menu::event(SDL_Event& event)
         y < pos_y + get_height()/2)
     {
       active_item = (y - (pos_y - get_height()/2)) / 24;
-      mouse_cursor->set_state(MC_LINK);
+      Globals::mouse_cursor->set_state(MC_LINK);
     }
     else
     {
-      mouse_cursor->set_state(MC_NORMAL);
+      Globals::mouse_cursor->set_state(MC_NORMAL);
     }
     break;
   default:

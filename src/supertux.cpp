@@ -46,13 +46,13 @@ int main(int argc, char * argv[])
   st_menu();
   loadshared();
 
-  if (launch_leveleditor_mode && level_startup_file)
+  if (Globals::launch_leveleditor_mode && Globals::level_startup_file)
     {
-    leveleditor(level_startup_file);
+    leveleditor(Globals::level_startup_file);
     }
-  else if (level_startup_file)
+  else if (Globals::level_startup_file)
     {
-      GameSession session(level_startup_file, 1, ST_GL_LOAD_LEVEL_FILE);
+      GameSession session(Globals::level_startup_file, 1, ST_GL_LOAD_LEVEL_FILE);
       session.run();
     }
   else

@@ -371,7 +371,7 @@ SurfaceSDL::draw(float x, float y, Uint8 alpha, bool update)
   if(alpha != 255)
     {
     /* Create a Surface, make it using colorkey, blit surface into temp, apply alpha
-      to temp sur, blit the temp into the screen */
+      to temp sur, blit the temp into the Globals::screen */
     /* Note: this has to be done, since SDL doesn't allow to set alpha to surfaces that
       already have an alpha mask yet... */
 
@@ -387,19 +387,19 @@ SurfaceSDL::draw(float x, float y, Uint8 alpha, bool update)
 
     SDL_UpperBlit(sdl_surface, NULL, sdl_surface_copy, NULL);
 
-    int ret = SDL_UpperBlit(sdl_surface_copy, NULL, screen, &dest);
+    int ret = SDL_UpperBlit(sdl_surface_copy, NULL, Globals::screen, &dest);
 
     if (update == UPDATE)
-      update_rect(screen, dest.x, dest.y, dest.w, dest.h);
+      update_rect(Globals::screen, dest.x, dest.y, dest.w, dest.h);
 
     SDL_FreeSurface (sdl_surface_copy);
     return ret;
     }
 
-  int ret = SDL_UpperBlit(sdl_surface, NULL, screen, &dest);
+  int ret = SDL_UpperBlit(sdl_surface, NULL, Globals::screen, &dest);
 
   if (update == UPDATE)
-    update_rect(screen, dest.x, dest.y, dest.w, dest.h);
+    update_rect(Globals::screen, dest.x, dest.y, dest.w, dest.h);
 
   return ret;
 }
@@ -411,13 +411,13 @@ SurfaceSDL::draw_bg(Uint8 alpha, bool update)
 
   dest.x = 0;
   dest.y = 0;
-  dest.w = screen->w;
-  dest.h = screen->h;
+  dest.w = Globals::screen->w;
+  dest.h = Globals::screen->h;
 
   if(alpha != 255)
     {
     /* Create a Surface, make it using colorkey, blit surface into temp, apply alpha
-      to temp sur, blit the temp into the screen */
+      to temp sur, blit the temp into the Globals::screen */
     /* Note: this has to be done, since SDL doesn't allow to set alpha to surfaces that
       already have an alpha mask yet... */
 
@@ -433,19 +433,19 @@ SurfaceSDL::draw_bg(Uint8 alpha, bool update)
 
     SDL_UpperBlit(sdl_surface, NULL, sdl_surface_copy, NULL);
 
-    int ret = SDL_UpperBlit(sdl_surface_copy, NULL, screen, &dest);
+    int ret = SDL_UpperBlit(sdl_surface_copy, NULL, Globals::screen, &dest);
 
     if (update == UPDATE)
-      update_rect(screen, dest.x, dest.y, dest.w, dest.h);
+      update_rect(Globals::screen, dest.x, dest.y, dest.w, dest.h);
 
     SDL_FreeSurface (sdl_surface_copy);
     return ret;
     }
 
-  int ret = SDL_SoftStretch(sdl_surface, NULL, screen, &dest);
+  int ret = SDL_SoftStretch(sdl_surface, NULL, Globals::screen, &dest);
 
   if (update == UPDATE)
-    update_rect(screen, dest.x, dest.y, dest.w, dest.h);
+    update_rect(Globals::screen, dest.x, dest.y, dest.w, dest.h);
 
   return ret;
 }
@@ -468,7 +468,7 @@ SurfaceSDL::draw_part(float sx, float sy, float x, float y, float w, float h, Ui
   if(alpha != 255)
     {
     /* Create a Surface, make it using colorkey, blit surface into temp, apply alpha
-      to temp sur, blit the temp into the screen */
+      to temp sur, blit the temp into the Globals::screen */
     /* Note: this has to be done, since SDL doesn't allow to set alpha to surfaces that
       already have an alpha mask yet... */
 
@@ -484,19 +484,19 @@ SurfaceSDL::draw_part(float sx, float sy, float x, float y, float w, float h, Ui
 
     SDL_UpperBlit(sdl_surface, NULL, sdl_surface_copy, NULL);
 
-    int ret = SDL_UpperBlit(sdl_surface_copy, NULL, screen, &dest);
+    int ret = SDL_UpperBlit(sdl_surface_copy, NULL, Globals::screen, &dest);
 
     if (update == UPDATE)
-      update_rect(screen, dest.x, dest.y, dest.w, dest.h);
+      update_rect(Globals::screen, dest.x, dest.y, dest.w, dest.h);
 
     SDL_FreeSurface (sdl_surface_copy);
     return ret;
     }
 
-  int ret = SDL_UpperBlit(sdl_surface, &src, screen, &dest);
+  int ret = SDL_UpperBlit(sdl_surface, &src, Globals::screen, &dest);
 
   if (update == UPDATE)
-    update_rect(screen, dest.x, dest.y, dest.w, dest.h);
+    update_rect(Globals::screen, dest.x, dest.y, dest.w, dest.h);
 
   return ret;
 }
@@ -520,11 +520,11 @@ SurfaceSDL::draw_stretched(float x, float y, int sw, int sh, Uint8 alpha, bool u
   SDL_UpperBlit(sdl_surface, NULL, sdl_surface_copy, NULL);
   SDL_SoftStretch(sdl_surface_copy, NULL, sdl_surface_copy, &dest);
 
-  int ret = SDL_UpperBlit(sdl_surface_copy,NULL,screen,&dest);
+  int ret = SDL_UpperBlit(sdl_surface_copy,NULL,Globals::screen,&dest);
   SDL_FreeSurface(sdl_surface_copy);
 
   if (update == UPDATE)
-    update_rect(screen, dest.x, dest.y, dest.w, dest.h);
+    update_rect(Globals::screen, dest.x, dest.y, dest.w, dest.h);
 
   return ret;
 }

@@ -89,7 +89,7 @@ string_to_direction(const std::string& directory)
 
 TileManager::TileManager()
 {
-  std::string stwt_filename = datadir +  "/images/worldmap/antarctica.stwt";
+  std::string stwt_filename = Globals::datadir +  "/images/worldmap/antarctica.stwt";
   lisp_object_t* root_obj = lisp_read_from_file(stwt_filename);
  
   if (!root_obj)
@@ -142,7 +142,7 @@ TileManager::TileManager()
                 }
 
               tile->sprite = new Surface(
-                           datadir +  "/images/worldmap/" + filename, 
+                           Globals::datadir +  "/images/worldmap/" + filename, 
                            USE_ALPHA);
 
               if (id >= int(tiles.size()))
@@ -184,9 +184,9 @@ TileManager::get(int i)
 Tux::Tux(WorldMap* worldmap_)
   : worldmap(worldmap_)
 {
-  largetux_sprite = new Surface(datadir +  "/images/worldmap/tux.png", USE_ALPHA);
-  firetux_sprite = new Surface(datadir +  "/images/worldmap/firetux.png", USE_ALPHA);
-  smalltux_sprite = new Surface(datadir +  "/images/worldmap/smalltux.png", USE_ALPHA);
+  largetux_sprite = new Surface(Globals::datadir +  "/images/worldmap/tux.png", USE_ALPHA);
+  firetux_sprite = new Surface(Globals::datadir +  "/images/worldmap/firetux.png", USE_ALPHA);
+  smalltux_sprite = new Surface(Globals::datadir +  "/images/worldmap/smalltux.png", USE_ALPHA);
 
   offset = 0;
   moving = false;
@@ -385,12 +385,12 @@ WorldMap::WorldMap()
 
   passive_message_timer.init(true);
 
-  level_sprite = new Surface(datadir +  "/images/worldmap/levelmarker.png", USE_ALPHA);
-  leveldot_green = new Surface(datadir +  "/images/worldmap/leveldot_green.png", USE_ALPHA);
-  leveldot_red = new Surface(datadir +  "/images/worldmap/leveldot_red.png", USE_ALPHA);
-  leveldot_teleporter = new Surface(datadir +  "/images/worldmap/teleporter.png", USE_ALPHA);
+  level_sprite = new Surface(Globals::datadir +  "/images/worldmap/levelmarker.png", USE_ALPHA);
+  leveldot_green = new Surface(Globals::datadir +  "/images/worldmap/leveldot_green.png", USE_ALPHA);
+  leveldot_red = new Surface(Globals::datadir +  "/images/worldmap/leveldot_red.png", USE_ALPHA);
+  leveldot_teleporter = new Surface(Globals::datadir +  "/images/worldmap/teleporter.png", USE_ALPHA);
   
-  map_file = datadir + "/levels/worldmaps/world1.stwm";
+  map_file = Globals::datadir + "/levels/worldmaps/world1.stwm";
   
   input_direction = D_NONE;
   enter_level = false;
@@ -413,7 +413,7 @@ WorldMap::~WorldMap()
 void
 WorldMap::set_map_file(std::string mapfile)
 {
-  map_file = datadir + "/levels/worldmaps/" + mapfile;
+  map_file = Globals::datadir + "/levels/worldmaps/" + mapfile;
 }
 
 void
@@ -518,10 +518,10 @@ void WorldMap::get_level_title(Levels::pointer level)
 
   FILE * fi;
   lisp_object_t* root_obj = 0;
-  fi = fopen((datadir +  "/levels/" + level->name).c_str(), "r");
+  fi = fopen((Globals::datadir +  "/levels/" + level->name).c_str(), "r");
   if (fi == NULL)
   {
-    perror((datadir +  "/levels/" + level->name).c_str());
+    perror((Globals::datadir +  "/levels/" + level->name).c_str());
     return;
   }
 
@@ -612,18 +612,18 @@ WorldMap::get_input()
 #endif
 
             case SDL_JOYAXISMOTION:
-              if (event.jaxis.axis == joystick_keymap.x_axis)
+              if (event.jaxis.axis == Globals::joystick_keymap.x_axis)
                 {
-                  if (event.jaxis.value < -joystick_keymap.dead_zone)
+                  if (event.jaxis.value < -Globals::joystick_keymap.dead_zone)
                     input_direction = D_WEST;
-                  else if (event.jaxis.value > joystick_keymap.dead_zone)
+                  else if (event.jaxis.value > Globals::joystick_keymap.dead_zone)
                     input_direction = D_EAST;
                 }
-              else if (event.jaxis.axis == joystick_keymap.y_axis)
+              else if (event.jaxis.axis == Globals::joystick_keymap.y_axis)
                 {
-                  if (event.jaxis.value > joystick_keymap.dead_zone)
+                  if (event.jaxis.value > Globals::joystick_keymap.dead_zone)
                     input_direction = D_SOUTH;
-                  else if (event.jaxis.value < -joystick_keymap.dead_zone)
+                  else if (event.jaxis.value < -Globals::joystick_keymap.dead_zone)
                     input_direction = D_NORTH;
                 }
               break;
@@ -640,9 +640,9 @@ WorldMap::get_input()
 	      break;
 
             case SDL_JOYBUTTONDOWN:
-              if (event.jbutton.button == joystick_keymap.b_button)
+              if (event.jbutton.button == Globals::joystick_keymap.b_button)
                 enter_level = true;
-              else if (event.jbutton.button == joystick_keymap.start_button)
+              else if (event.jbutton.button == Globals::joystick_keymap.start_button)
                 on_escape_press();
               break;
 
@@ -744,7 +744,7 @@ WorldMap::update(float delta)
               level->y == tux->get_tile_pos().y)
             {
               std::cout << "Enter the current level: " << level->name << std::endl;;
-              GameSession session(datadir +  "/levels/" + level->name,
+              GameSession session(Globals::datadir +  "/levels/" + level->name,
                                   1, ST_GL_LOAD_LEVEL_FILE);
 
               switch (session.run())
@@ -790,8 +790,8 @@ WorldMap::update(float delta)
                       { 
 #ifndef NOSOUND
                         MusicRef theme =
-                          music_manager->load_music(datadir + "/music/theme.ogg");
-						MusicRef credits = music_manager->load_music(datadir + "/music/credits.ogg");
+                          music_manager->load_music(Globals::datadir + "/music/theme.ogg");
+						MusicRef credits = music_manager->load_music(Globals::datadir + "/music/credits.ogg");
                         music_manager->play_music(theme);
 #endif
                         // Display final credits and go back to the main menu
@@ -955,14 +955,14 @@ WorldMap::draw_status()
 
   char str[80];
   sprintf(str, "%d", player_status.score);
-  white_text->draw("SCORE", 0, 0);
-  gold_text->draw(str, (int)(96)/xdiv, 0);
+  Globals::white_text->draw("SCORE", 0, 0);
+  Globals::gold_text->draw(str, (int)(96)/xdiv, 0);
 
   sprintf(str, "%d", player_status.distros);
-  white_text->draw_align("COINS", (int)(320-64)/xdiv, 0,  A_LEFT, A_TOP);
-  gold_text->draw_align(str, (int)(320+64)/xdiv, 0, A_RIGHT, A_TOP);
+  Globals::white_text->draw_align("COINS", (int)(320-64)/xdiv, 0,  A_LEFT, A_TOP);
+  Globals::gold_text->draw_align(str, (int)(320+64)/xdiv, 0, A_RIGHT, A_TOP);
 
-  white_text->draw("LIVES", (int)(480)/xdiv, 0);
+  Globals::white_text->draw("LIVES", (int)(480)/xdiv, 0);
   if (player_status.lives >= 5)
     {
       sprintf(str, "%dx", player_status.lives);
@@ -970,7 +970,7 @@ WorldMap::draw_status()
       gold_text->draw_align(str, (int)(617)/xdiv-5, 0, A_RIGHT, A_TOP);
       tux_life->draw((int)((565-12+(18*3))), 0);
 #else
-      gold_text->draw_align(str, (int)(617), 0, A_RIGHT, A_TOP);
+      Globals::gold_text->draw_align(str, (int)(617), 0, A_RIGHT, A_TOP);
       tux_life->draw((int)((565+(18*3))), 0);
 #endif
     }
@@ -990,20 +990,20 @@ WorldMap::draw_status()
               if(!i->name.empty())
                 {
 #ifndef RES320X240
-              white_text->draw_align(i->title.c_str(), screen->w/2, screen->h,  A_HMIDDLE, A_BOTTOM);
+              Globals::white_text->draw_align(i->title.c_str(), Globals::screen->w/2, Globals::screen->h,  A_HMIDDLE, A_BOTTOM);
 #else
-              white_text->draw_align(i->title.c_str(), screen->w/2, 470,  A_HMIDDLE, A_BOTTOM);
+              Globals::white_text->draw_align(i->title.c_str(), screen->w/2, 470,  A_HMIDDLE, A_BOTTOM);
 #endif
                 }
 				  else if (i->teleport_dest_x != -1) {
 				  	if(!i->teleport_message.empty())
-               	 gold_text->draw_align(i->teleport_message.c_str(), screen->w/2, screen->h,  A_HMIDDLE, A_BOTTOM);
+               	 Globals::gold_text->draw_align(i->teleport_message.c_str(), Globals::screen->w/2, Globals::screen->h,  A_HMIDDLE, A_BOTTOM);
 				  }
 
               /* Display a message in the map, if any as been selected */
               if(!i->display_map_message.empty() && !i->passive_message)
-                gold_text->draw_align(i->display_map_message.c_str(),
-                     screen->w/2, screen->h - (int)(30),A_HMIDDLE, A_BOTTOM);
+                Globals::gold_text->draw_align(i->display_map_message.c_str(),
+                     Globals::screen->w/2, Globals::screen->h - (int)(30),A_HMIDDLE, A_BOTTOM);
               break;
             }
         }
@@ -1011,8 +1011,8 @@ WorldMap::draw_status()
 
   /* Display a passive message in the map, if needed */
   if(passive_message_timer.check())
-    gold_text->draw_align(passive_message.c_str(),
-                          screen->w/2, screen->h - (int)(30),A_HMIDDLE, A_BOTTOM);
+    Globals::gold_text->draw_align(passive_message.c_str(),
+                          Globals::screen->w/2, Globals::screen->h - (int)(30),A_HMIDDLE, A_BOTTOM);
 }
 
 void
@@ -1023,7 +1023,7 @@ WorldMap::display()
   quit = false;
 
 #ifndef NOSOUND
-  song = music_manager->load_music(datadir +  "/music/" + music);
+  song = music_manager->load_music(Globals::datadir +  "/music/" + music);
   music_manager->play_music(song);
 #endif
 
@@ -1047,14 +1047,14 @@ WorldMap::display()
       Point tux_pos = tux->get_pos();
       if (1)
         {
-          offset.x = -tux_pos.x + screen->w/2;
-          offset.y = -tux_pos.y + screen->h/2;
+          offset.x = -tux_pos.x + Globals::screen->w/2;
+          offset.y = -tux_pos.y + Globals::screen->h/2;
 
           if (offset.x > 0) offset.x = 0;
           if (offset.y > 0) offset.y = 0;
 
-          if (offset.x < screen->w - width*32) offset.x = screen->w - width*32;
-          if (offset.y < screen->h - height*32) offset.y = screen->h - height*32;
+          if (offset.x < Globals::screen->w - width*32) offset.x = Globals::screen->w - width*32;
+          if (offset.y < Globals::screen->h - height*32) offset.y = Globals::screen->h - height*32;
         } 
 
       draw(offset);
@@ -1065,7 +1065,7 @@ WorldMap::display()
       if(Menu::current())
         {
           Menu::current()->draw();
-          mouse_cursor->draw();
+          Globals::mouse_cursor->draw();
         }
 #else
       if(Menu::current())

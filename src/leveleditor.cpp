@@ -195,20 +195,20 @@ int leveleditor(char* filename)
     {
       if(select_tilegroup_menu_effect.check())
       {
-        select_tilegroup_menu->set_pos(screen->w - 64 + select_tilegroup_menu_effect.get_left(),
+        select_tilegroup_menu->set_pos(Globals::screen->w - 64 + select_tilegroup_menu_effect.get_left(),
                                        66,-0.5,0.5);
       }
       else
-        select_tilegroup_menu->set_pos(screen->w - 64,66,-0.5,0.5);
+        select_tilegroup_menu->set_pos(Globals::screen->w - 64,66,-0.5,0.5);
     }
     else if(Menu::current() == select_objects_menu)
     {
       if(select_objects_menu_effect.check())
       {
-        select_objects_menu->set_pos(screen->w - 64 + select_objects_menu_effect.get_left(),82,-0.5,0.5);
+        select_objects_menu->set_pos(Globals::screen->w - 64 + select_objects_menu_effect.get_left(),82,-0.5,0.5);
       }
       else
-        select_objects_menu->set_pos(screen->w - 64,82,-0.5,0.5);
+        select_objects_menu->set_pos(Globals::screen->w - 64,82,-0.5,0.5);
     }
 
     if(le_world != NULL)
@@ -216,8 +216,8 @@ int leveleditor(char* filename)
       /* making events results to be in order */
       if(pos_x < 0)
         pos_x = 0;
-      if(pos_x > (le_world->get_level()->width * 32 + 2*32) - screen->w)
-        pos_x = (le_world->get_level()->width * 32 +2*32) - screen->w;
+      if(pos_x > (le_world->get_level()->width * 32 + 2*32) - Globals::screen->w)
+        pos_x = (le_world->get_level()->width * 32 +2*32) - Globals::screen->w;
 
       /* draw the level */
       le_drawlevel();
@@ -379,7 +379,7 @@ int le_load_level_subset(char *filename)
   le_level = 1;
   le_goto_level(1);
 
-  //GameSession* session = new GameSession(datadir + "/levels/" + le_level_subset->name + "/level1.stl", 0, ST_GL_DEMO_GAME);
+  //GameSession* session = new GameSession(Globals::datadir + "/levels/" + le_level_subset->name + "/level1.stl", 0, ST_GL_DEMO_GAME);
 
   Menu::set_current(NULL);
 
@@ -466,7 +466,7 @@ void le_init_menus()
     {
       select_tilegroup_menu->additem(MN_ACTION, it->name, 0, 0, tileid);
       tileid++;
-      tilegroups_map[(*it).name] = new ButtonPanel(screen->w - 64,96, 64, 318);
+      tilegroups_map[(*it).name] = new ButtonPanel(Globals::screen->w - 64,96, 64, 318);
       i = 0;
 
       for(std::vector<int>::const_iterator sit = (*it).tiles.begin();
@@ -504,7 +504,7 @@ void le_init_menus()
   select_objects_menu->additem(MN_LABEL,"Objects",0,0);
   select_objects_menu->additem(MN_HL,"",0,0);
   select_objects_menu->additem(MN_ACTION,"BadGuys",0,0,1);
-  objects_map["BadGuys"] = new ButtonPanel(screen->w - 64,96, 64, 318);
+  objects_map["BadGuys"] = new ButtonPanel(Globals::screen->w - 64,96, 64, 318);
 
   for(int i = 0; i < NUM_BadGuyKinds; ++i)
   {
@@ -544,34 +544,34 @@ int le_init()
   le_mouse_clicked[LEFT] = false;
   le_mouse_clicked[RIGHT] = false;
 
-  le_selection = new Surface(datadir + "/images/icons/select.png", USE_ALPHA);
+  le_selection = new Surface(Globals::datadir + "/images/icons/select.png", USE_ALPHA);
 
   select_tilegroup_menu_effect.init(false);
   select_objects_menu_effect.init(false);
   display_level_info.init(false);
 
   /* Load buttons */
-  le_save_level_bt = new Button("/images/icons/save.png","Save level", SDLK_F6,screen->w-64,32);
-  le_exit_bt = new Button("/images/icons/exit.png","Exit", SDLK_F10,screen->w-32,32);
-  le_next_level_bt = new Button("/images/icons/up.png","Next level", SDLK_PAGEUP,screen->w-64,0);
-  le_previous_level_bt = new Button("/images/icons/down.png","Previous level",SDLK_PAGEDOWN,screen->w-32,0);
-  le_rubber_bt = new Button("/images/icons/rubber.png","Rubber",SDLK_DELETE,screen->w-32,48);
-  le_select_mode_one_bt = new Button ("/images/icons/select-mode1.png","Select single tile",SDLK_F3,screen->w-64,48);
-  le_select_mode_two_bt = new Button("/images/icons/select-mode2.png","Select multiple tiles",SDLK_F3,screen->w-64,48);
-  le_test_level_bt = new Button("/images/icons/test-level.png","Test level",SDLK_F4,screen->w-64,screen->h - 64);
-  le_settings_bt = new Button("/images/icons/settings.png","Level settings",SDLK_F5,screen->w-32,screen->h - 64);
+  le_save_level_bt = new Button("/images/icons/save.png","Save level", SDLK_F6,Globals::screen->w-64,32);
+  le_exit_bt = new Button("/images/icons/exit.png","Exit", SDLK_F10,Globals::screen->w-32,32);
+  le_next_level_bt = new Button("/images/icons/up.png","Next level", SDLK_PAGEUP,Globals::screen->w-64,0);
+  le_previous_level_bt = new Button("/images/icons/down.png","Previous level",SDLK_PAGEDOWN,Globals::screen->w-32,0);
+  le_rubber_bt = new Button("/images/icons/rubber.png","Rubber",SDLK_DELETE,Globals::screen->w-32,48);
+  le_select_mode_one_bt = new Button ("/images/icons/select-mode1.png","Select single tile",SDLK_F3,Globals::screen->w-64,48);
+  le_select_mode_two_bt = new Button("/images/icons/select-mode2.png","Select multiple tiles",SDLK_F3,Globals::screen->w-64,48);
+  le_test_level_bt = new Button("/images/icons/test-level.png","Test level",SDLK_F4,Globals::screen->w-64,Globals::screen->h - 64);
+  le_settings_bt = new Button("/images/icons/settings.png","Level settings",SDLK_F5,Globals::screen->w-32,Globals::screen->h - 64);
   le_move_left_bt = new Button("/images/icons/left.png","Move left",SDLK_LEFT,0,0);
-  le_move_right_bt = new Button("/images/icons/right.png","Move right",SDLK_RIGHT,screen->w-80,0);
-  le_tilegroup_bt = new Button("/images/icons/tilegroup.png","Select Tilegroup", SDLK_F7,screen->w-64,64);
-  le_objects_bt = new Button("/images/icons/objects.png","Select Objects", SDLK_F8,screen->w-64,80);
-  le_object_select_bt = new Button("/images/icons/select-one.png","Select an Object", SDLK_s, screen->w - 64, screen->h-98);
-  le_object_properties_bt = new Button("/images/icons/properties.png","Edit object properties", SDLK_p, screen->w - 32, screen->h-98);
+  le_move_right_bt = new Button("/images/icons/right.png","Move right",SDLK_RIGHT,Globals::screen->w-80,0);
+  le_tilegroup_bt = new Button("/images/icons/tilegroup.png","Select Tilegroup", SDLK_F7,Globals::screen->w-64,64);
+  le_objects_bt = new Button("/images/icons/objects.png","Select Objects", SDLK_F8,Globals::screen->w-64,80);
+  le_object_select_bt = new Button("/images/icons/select-one.png","Select an Object", SDLK_s, Globals::screen->w - 64, Globals::screen->h-98);
+  le_object_properties_bt = new Button("/images/icons/properties.png","Edit object properties", SDLK_p, Globals::screen->w - 32, Globals::screen->h-98);
   le_object_properties_bt->set_active(false);
 
-  mouse_select_object = new MouseCursor(datadir + "/images/status/select-cursor.png",1);
+  mouse_select_object = new MouseCursor(Globals::datadir + "/images/status/select-cursor.png",1);
   mouse_select_object->set_mid(16,16);
 
-  le_tilemap_panel = new ButtonPanel(screen->w-64,screen->h-32,32,32);
+  le_tilemap_panel = new ButtonPanel(Globals::screen->w-64,Globals::screen->h-32,32,32);
   le_tilemap_panel->set_button_size(32,10);
   le_tilemap_panel->additem(new Button("/images/icons/bkgrd.png","Background",SDLK_b,0,0),TM_BG);
   le_tilemap_panel->additem(new Button("/images/icons/intact.png","Interactive",SDLK_i,0,0),TM_IA);
@@ -762,13 +762,13 @@ void le_drawminimap()
     return;
 
   int mini_tile_width;
-  if(screen->w - 64 > le_world->get_level()->width * 4)
+  if(Globals::screen->w - 64 > le_world->get_level()->width * 4)
     mini_tile_width = 4;
-  else if(screen->w - 64 > le_world->get_level()->width * 2)
+  else if(Globals::screen->w - 64 > le_world->get_level()->width * 2)
     mini_tile_width = 2;
   else
     mini_tile_width = 1;
-  int left_offset = (screen->w - 64 - le_world->get_level()->width*mini_tile_width) / 2;
+  int left_offset = (Globals::screen->w - 64 - le_world->get_level()->width*mini_tile_width) / 2;
 
   for (int y = 0; y < 15; ++y)
     for (int x = 0; x < le_world->get_level()->width; ++x)
@@ -802,9 +802,9 @@ void le_drawinterface()
     if(le_show_grid)
     {
       for(x = 0; x < 19; x++)
-        fillrect(x*32 - ((int)pos_x % 32), 0, 1, screen->h, 225, 225, 225,255);
+        fillrect(x*32 - ((int)pos_x % 32), 0, 1, Globals::screen->h, 225, 225, 225,255);
       for(y = 0; y < 15; y++)
-        fillrect(0, y*32, screen->w - 32, 1, 225, 225, 225,255);
+        fillrect(0, y*32, Globals::screen->w - 32, 1, 225, 225, 225,255);
     }
   }
 
@@ -834,7 +834,7 @@ void le_drawinterface()
 
 
   /* draw button bar */
-  fillrect(screen->w - 64, 0, 64, screen->h, 50, 50, 50,255);
+  fillrect(Globals::screen->w - 64, 0, 64, Globals::screen->h, 50, 50, 50,255);
 
   if(le_current.IsTile())
   {
@@ -889,20 +889,20 @@ void le_drawinterface()
     }
 
     sprintf(str, "%d/%d", le_level,le_level_subset->levels);
-    white_text->drawf(str, (le_level_subset->levels < 10) ? -10 : 0, 16, A_RIGHT, A_TOP, 0);
+    Globals::white_text->drawf(str, (le_level_subset->levels < 10) ? -10 : 0, 16, A_RIGHT, A_TOP, 0);
 
     if(!le_help_shown)
-      white_small_text->draw("F1 for Help", 10, 430, 1);
+      Globals::white_small_text->draw("F1 for Help", 10, 430, 1);
 
     if(display_level_info.check())
-      white_text->drawf(le_world->get_level()->name.c_str(), 0, 0, A_HMIDDLE, A_TOP, 0);
+      Globals::white_text->drawf(le_world->get_level()->name.c_str(), 0, 0, A_HMIDDLE, A_TOP, 0);
   }
   else
   {
     if(!Menu::current())
-      white_small_text->draw("No Level Subset loaded - Press ESC and choose one in the menu", 10, 430, 1);
+      Globals::white_small_text->draw("No Level Subset loaded - Press ESC and choose one in the menu", 10, 430, 1);
     else
-      white_small_text->draw("No Level Subset loaded", 10, 430, 1);
+      Globals::white_small_text->draw("No Level Subset loaded", 10, 430, 1);
   }
 
 }
@@ -915,10 +915,10 @@ void le_drawlevel()
   /* Draw the real background */
   if(le_world->get_level()->bkgd_image[0] != '\0')
   {
-    s = (int)((float)pos_x * ((float)le_world->get_level()->bkgd_speed/100.0f)) % screen->w;
+    s = (int)((float)pos_x * ((float)le_world->get_level()->bkgd_speed/100.0f)) % Globals::screen->w;
     le_world->get_level()->img_bkgd->draw_part(s,0,0,0,
         le_world->get_level()->img_bkgd->w - s - 32, le_world->get_level()->img_bkgd->h);
-    le_world->get_level()->img_bkgd->draw_part(0,0,screen->w - s - 32 ,0,s,
+    le_world->get_level()->img_bkgd->draw_part(0,0,Globals::screen->w - s - 32 ,0,s,
         le_world->get_level()->img_bkgd->h);
   }
   else
@@ -937,7 +937,7 @@ void le_drawlevel()
     le_current.obj->move_to(cursor_x, cursor_y);
   }
 
-  /*       clearscreen(current_level.bkgd_red, current_level.bkgd_green, current_level.bkgd_blue); */
+  /*       clearGlobals::screen(current_level.bkgd_red, current_level.bkgd_green, current_level.bkgd_blue); */
 
   for (y = 0; y < 15; ++y)
     for (x = 0; x < 20; ++x)
@@ -1055,7 +1055,7 @@ void le_change_object_properties(GameObject *pobj)
     if(Menu::current() == NULL)
       loop = false;
 
-    mouse_cursor->draw();
+    Globals::mouse_cursor->draw();
     flipscreen();
     SDL_Delay(25);
   }
@@ -1085,14 +1085,14 @@ void le_checkevents()
     }
     else
     {
-      mouse_cursor->set_state(MC_NORMAL);
+      Globals::mouse_cursor->set_state(MC_NORMAL);
 
       /* testing SDL_KEYDOWN, SDL_KEYUP and SDL_QUIT events*/
       if(event.type == SDL_KEYDOWN
           || ((event.type == SDL_MOUSEBUTTONDOWN || SDL_MOUSEMOTION)
               && (event.motion.x > 0
-                  && event.motion.x < screen->w - 64 &&
-                  event.motion.y > 0 && event.motion.y < screen->h)))
+                  && event.motion.x < Globals::screen->w - 64 &&
+                  event.motion.y > 0 && event.motion.y < Globals::screen->h)))
       {
         switch(event.type)
         {
@@ -1138,8 +1138,8 @@ void le_checkevents()
             else
               cursor_y += KEY_CURSOR_FASTSPEED;
 
-            if(cursor_y > screen->h-32)
-              cursor_y = screen->h-32;
+            if(cursor_y > Globals::screen->h-32)
+              cursor_y = Globals::screen->h-32;
             break;
           case SDLK_LCTRL:
             fire =UP;
@@ -1242,8 +1242,8 @@ void le_checkevents()
 
     if(le_world != NULL)
     {
-      if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP || ((event.type == SDL_MOUSEBUTTONDOWN || SDL_MOUSEMOTION) && (event.motion.x > screen->w-64 && event.motion.x < screen->w &&
-          event.motion.y > 0 && event.motion.y < screen->h)))
+      if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP || ((event.type == SDL_MOUSEBUTTONDOWN || SDL_MOUSEMOTION) && (event.motion.x > Globals::screen->w-64 && event.motion.x < Globals::screen->w &&
+          event.motion.y > 0 && event.motion.y < Globals::screen->h)))
       {
         le_mouse_pressed[LEFT] = false;
         le_mouse_pressed[RIGHT] = false;
@@ -1328,7 +1328,7 @@ void le_checkevents()
           case BUTTON_CLICKED:
             Menu::set_current(select_tilegroup_menu);
             select_tilegroup_menu_effect.start(200);
-            select_tilegroup_menu->set_pos(screen->w - 64,100,-0.5,0.5);
+            select_tilegroup_menu->set_pos(Globals::screen->w - 64,100,-0.5,0.5);
             break;
           case BUTTON_WHEELUP:
             if(cur_tilegroup.empty())
@@ -1375,7 +1375,7 @@ void le_checkevents()
           case BUTTON_CLICKED:
             Menu::set_current(select_objects_menu);
             select_objects_menu_effect.start(200);
-            select_objects_menu->set_pos(screen->w - 64,100,-0.5,0.5);
+            select_objects_menu->set_pos(Globals::screen->w - 64,100,-0.5,0.5);
             break;
           case BUTTON_WHEELUP:
             it = objects_map.find(cur_objects);
@@ -1513,7 +1513,7 @@ void le_checkevents()
             else
               le_object_properties_bt->set_active(true);
 
-            MouseCursor::set_current(mouse_cursor);
+            MouseCursor::set_current(Globals::mouse_cursor);
 
           }
           else
@@ -1752,7 +1752,7 @@ void le_showhelp()
                    "Pick a tile and simply hold down  ",
                    "the left mouse button over the map",
                    "to \"paint\" your selection over",
-                   "the screen.",
+                   "the Globals::screen.",
                    "",
                    "There are three layers for painting",
                    "tiles upon, Background layer,",
@@ -1779,7 +1779,7 @@ void le_showhelp()
                     "bad guys and other objects in the",
                     "game. Unlike placing tiles, you",
                     "cannot \"paint\" enemies. Click",
-                    "them onto the screen one at a time.",
+                    "them onto the Globals::screen one at a time.",
                     "",
                     "To change the settings of your",
                     "level, click the button with the",
@@ -1812,12 +1812,12 @@ void le_showhelp()
 
 
 
-  blue_text->drawf("- Help -", 0, 30, A_HMIDDLE, A_TOP, 2);
+  Globals::blue_text->drawf("- Help -", 0, 30, A_HMIDDLE, A_TOP, 2);
 
   for(i = 0; i < sizeof(text)/sizeof(char *); i++)
-    white_text->draw(text[i], 5, 80+(i*white_text->h), 1);
+    Globals::white_text->draw(text[i], 5, 80+(i*Globals::white_text->h), 1);
 
-  gold_text->drawf("Press Anything to Continue - Page 1/3", 0, 0, A_LEFT, A_BOTTOM, 1);
+  Globals::gold_text->drawf("Press Anything to Continue - Page 1/3", 0, 0, A_LEFT, A_BOTTOM, 1);
 
   flipscreen();
 
@@ -1833,12 +1833,12 @@ void le_showhelp()
   le_drawinterface();
 
 
-  blue_text->drawf("- Help -", 0, 30, A_HMIDDLE, A_TOP, 2);
+  Globals::blue_text->drawf("- Help -", 0, 30, A_HMIDDLE, A_TOP, 2);
 
   for(i = 0; i < sizeof(text2)/sizeof(char *); i++)
-    white_text->draw(text2[i], 5, 80+(i*white_text->h), 1);
+    Globals::white_text->draw(text2[i], 5, 80+(i*Globals::white_text->h), 1);
 
-  gold_text->drawf("Press Anything to Continue - Page 2/3", 0, 0, A_LEFT, A_BOTTOM, 1);
+  Globals::gold_text->drawf("Press Anything to Continue - Page 2/3", 0, 0, A_LEFT, A_BOTTOM, 1);
 
   flipscreen();
 
@@ -1854,12 +1854,12 @@ void le_showhelp()
   le_drawinterface();
 
 
-  blue_text->drawf("- Help -", 0, 30, A_HMIDDLE, A_TOP, 2);
+  Globals::blue_text->drawf("- Help -", 0, 30, A_HMIDDLE, A_TOP, 2);
 
   for(i = 0; i < sizeof(text3)/sizeof(char *); i++)
-    white_text->draw(text3[i], 5, 80+(i*white_text->h), 1);
+    Globals::white_text->draw(text3[i], 5, 80+(i*Globals::white_text->h), 1);
 
-  gold_text->drawf("Press Anything to Continue - Page 3/3", 0, 0, A_LEFT, A_BOTTOM, 1);
+  Globals::gold_text->drawf("Press Anything to Continue - Page 3/3", 0, 0, A_LEFT, A_BOTTOM, 1);
 
   flipscreen();
 

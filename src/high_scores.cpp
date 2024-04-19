@@ -84,7 +84,7 @@ void save_hs(int score)
   Surface* bkgd;
   SDL_Event event;
 
-  bkgd = new Surface(datadir + "/images/highscore/highscore.png", IGNORE_ALPHA);
+  bkgd = new Surface(Globals::datadir + "/images/highscore/highscore.png", IGNORE_ALPHA);
 
   hs_score = score;
 
@@ -100,10 +100,10 @@ void save_hs(int score)
     {
       bkgd->draw_bg();
 
-      blue_text->drawf("Congratulations", 0, 130, A_HMIDDLE, A_TOP, 2, NO_UPDATE);
-      blue_text->draw("Your score:", 150, 180, 1, NO_UPDATE);
+      Globals::blue_text->drawf("Congratulations", 0, 130, A_HMIDDLE, A_TOP, 2, NO_UPDATE);
+      Globals::blue_text->draw("Your score:", 150, 180, 1, NO_UPDATE);
       sprintf(str, "%d", hs_score);
-      yellow_nums->draw(str, 350, 170, 1, NO_UPDATE);
+      Globals::yellow_nums->draw(str, 350, 170, 1, NO_UPDATE);
 
       Menu::current()->draw();
       Menu::current()->action();

@@ -188,14 +188,14 @@ Text::drawf(const  char* text, int x, int y,
   if(text != NULL)
     {
       if(halign == A_RIGHT)  /* FIXME: this doesn't work correctly for strings with newlines.*/
-        x += screen->w - (strlen(text)*w);
+        x += Globals::screen->w - (strlen(text)*w);
       else if(halign == A_HMIDDLE)
-        x += screen->w/2 - ((strlen(text)*w)/2);
+        x += Globals::screen->w/2 - ((strlen(text)*w)/2);
 
       if(valign == A_BOTTOM)
-        y += screen->h - h;
+        y += Globals::screen->h - h;
       else if(valign == A_VMIDDLE)
-        y += screen->h/2 - h/2;
+        y += Globals::screen->h/2 - h/2;
 
       draw(text,x,y,shadowsize, update);
     }
@@ -213,13 +213,13 @@ Text::erasetext(const  char * text, int x, int y, Surface * ptexture, int update
   dest.w = strlen(text) * w + shadowsize;
   dest.h = h;
 
-  if (dest.w > screen->w)
-    dest.w = screen->w;
+  if (dest.w > Globals::screen->w)
+    dest.w = Globals::screen->w;
 
   ptexture->draw_part(dest.x,dest.y,dest.x,dest.y,dest.w,dest.h, 255, update);
 
   if (update == UPDATE)
-    update_rect(screen, dest.x, dest.y, dest.w, dest.h);
+    update_rect(Globals::screen, dest.x, dest.y, dest.w, dest.h);
 }
 
 
@@ -228,7 +228,7 @@ Text::erasetext(const  char * text, int x, int y, Surface * ptexture, int update
 void
 Text::erasecenteredtext(const  char * text, int y, Surface * ptexture, int update, int shadowsize)
 {
-  erasetext(text, screen->w / 2 - (strlen(text) * 8), y, ptexture, update, shadowsize);
+  erasetext(text, Globals::screen->w / 2 - (strlen(text) * 8), y, ptexture, update, shadowsize);
 }
 
 
@@ -241,7 +241,7 @@ Text::erasecenteredtext(const  char * text, int y, Surface * ptexture, int updat
 
 void display_text_file(const std::string& file, const std::string& surface, float scroll_speed)
 {
-  Surface* sur = new Surface(datadir + surface, IGNORE_ALPHA);
+  Surface* sur = new Surface(Globals::datadir + surface, IGNORE_ALPHA);
   display_text_file(file, sur, scroll_speed);
   delete sur;
 }
@@ -258,7 +258,7 @@ void display_text_file(const std::string& file, Surface* surface, float scroll_s
   string_list_type names;
   char filename[1024];
   string_list_init(&names);
-  sprintf(filename,"%s/%s", datadir.c_str(), file.c_str());
+  sprintf(filename,"%s/%s", Globals::datadir.c_str(), file.c_str());
   if((fi = fopen(filename,"r")) != NULL)
     {
       while(fgets(temp, sizeof(temp), fi) != NULL)
@@ -337,17 +337,17 @@ void display_text_file(const std::string& file, Surface* surface, float scroll_s
         switch(names.item[i][0])
           {
           case ' ':
-            white_small_text->drawf(names.item[i]+1, 0, screen->h+y-int(scroll),
+            Globals::white_small_text->drawf(names.item[i]+1, 0, Globals::screen->h+y-int(scroll),
                 A_HMIDDLE, A_TOP, 1);
-            y += white_small_text->h+ITEMS_SPACE;
+            y += Globals::white_small_text->h+ITEMS_SPACE;
 #ifdef RES320X240
 	    y += 6;
 #endif
             break;
           case '	':
-            white_text->drawf(names.item[i]+1, 0, screen->h+y-int(scroll),
+            Globals::white_text->drawf(names.item[i]+1, 0, Globals::screen->h+y-int(scroll),
                 A_HMIDDLE, A_TOP, 1);
-            y += white_text->h+ITEMS_SPACE;
+            y += Globals::white_text->h+ITEMS_SPACE;
 #ifdef RES320X240
 	    y += 6;
 #endif
@@ -356,17 +356,17 @@ void display_text_file(const std::string& file, Surface* surface, float scroll_s
 #ifdef RES320X240
             white_text->drawf(names.item[i]+1, 0, screen->h+y-int(scroll), A_HMIDDLE, A_TOP, 3);
 #else
-            white_big_text->drawf(names.item[i]+1, 0, screen->h+y-int(scroll), A_HMIDDLE, A_TOP, 3);
+            Globals::white_big_text->drawf(names.item[i]+1, 0, Globals::screen->h+y-int(scroll), A_HMIDDLE, A_TOP, 3);
 #endif
-            y += white_big_text->h+ITEMS_SPACE;
+            y += Globals::white_big_text->h+ITEMS_SPACE;
 #ifdef RES320X240
 	    y += 6;
 #endif
             break;
           default:
-            blue_text->drawf(names.item[i], 0, screen->h+y-int(scroll),
+            Globals::blue_text->drawf(names.item[i], 0, Globals::screen->h+y-int(scroll),
                 A_HMIDDLE, A_TOP, 1);
-            y += blue_text->h+ITEMS_SPACE;
+            y += Globals::blue_text->h+ITEMS_SPACE;
 #ifdef RES320X240
 	    y += 6;
 #endif
@@ -376,7 +376,7 @@ void display_text_file(const std::string& file, Surface* surface, float scroll_s
 
       flipscreen();
 
-      if(screen->h+y-scroll < 0 && 20+screen->h+y-scroll < 0)
+      if(Globals::screen->h+y-scroll < 0 && 20+Globals::screen->h+y-scroll < 0)
         done = 1;
 
       Uint32 ticks = SDL_GetTicks();

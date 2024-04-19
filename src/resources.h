@@ -20,6 +20,7 @@
 #ifndef SUPERTUX_RESOURCES_H
 #define SUPERTUX_RESOURCES_H
 
+#include "texture.h"
 #ifndef NOSOUND
 #include "musicref.h"
 #endif

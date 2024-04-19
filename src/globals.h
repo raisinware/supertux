@@ -28,9 +28,6 @@
 #include "menu.h"
 #include "mousecursor.h"
 
-
-extern std::string datadir;
-
 struct JoystickKeymap
 {
   int a_button;
@@ -44,6 +41,11 @@ struct JoystickKeymap
 
   JoystickKeymap();
 };
+
+
+namespace Globals {
+
+extern std::string datadir;
 
 extern JoystickKeymap joystick_keymap;
 
@@ -63,7 +65,6 @@ extern Text* yellow_nums;
 
 extern MouseCursor * mouse_cursor;
 
-extern bool use_gl;
 extern bool use_joystick;
 extern bool use_fullscreen;
 extern bool debug_mode;
@@ -81,6 +82,9 @@ extern char* st_save_dir;
 
 extern float game_speed;
 extern SDL_Joystick * js;
+
+}
+
 
 int wait_for_event(SDL_Event& event,unsigned int min_delay = 0, unsigned int max_delay = 0, bool empty_events = false);
 

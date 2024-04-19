@@ -186,9 +186,9 @@ World::draw()
   /* Draw the real background */
   if(level->img_bkgd)
     {
-      int s = (int)((float)scroll_x * ((float)level->bkgd_speed/100.0f)) % screen->w;
+      int s = (int)((float)scroll_x * ((float)level->bkgd_speed/100.0f)) % Globals::screen->w;
       level->img_bkgd->draw_part(s, 0,0,0,level->img_bkgd->w - s, level->img_bkgd->h);
-      level->img_bkgd->draw_part(0, 0,screen->w - s ,0,s,level->img_bkgd->h);
+      level->img_bkgd->draw_part(0, 0,Globals::screen->w - s ,0,s,level->img_bkgd->h);
     }
   else
     {
@@ -340,7 +340,7 @@ void World::scrolling(double frame_ratio)
 
   int tux_pos_x = (int)(tux.base.x + (tux.base.width/2));
 
-  if (level->back_scrolling || debug_mode)
+  if (level->back_scrolling || Globals::debug_mode)
   {
     if(tux.old_dir != tux.dir && level->back_scrolling)
       scrolling_timer.start(CHANGE_DIR_SCROLL_SPEED);
@@ -349,13 +349,13 @@ void World::scrolling(double frame_ratio)
     {
       float final_scroll_x;
       if (tux.physic.get_velocity_x() > 0)
-        final_scroll_x = tux_pos_x - (screen->w - X_SPACE);
+        final_scroll_x = tux_pos_x - (Globals::screen->w - X_SPACE);
       else if (tux.physic.get_velocity_x() < 0)
         final_scroll_x = tux_pos_x - X_SPACE;
       else
       {
         if (tux.dir == RIGHT)
-          final_scroll_x = tux_pos_x - (screen->w - X_SPACE);
+          final_scroll_x = tux_pos_x - (Globals::screen->w - X_SPACE);
         else if (tux.dir == LEFT && level->back_scrolling)
           final_scroll_x = tux_pos_x - X_SPACE;
       }
@@ -368,14 +368,14 @@ void World::scrolling(double frame_ratio)
     }
     else
     {
-      if (tux.physic.get_velocity_x() > 0 && scroll_x < tux_pos_x - (screen->w - X_SPACE))
-        scroll_x = tux_pos_x - (screen->w - X_SPACE);
+      if (tux.physic.get_velocity_x() > 0 && scroll_x < tux_pos_x - (Globals::screen->w - X_SPACE))
+        scroll_x = tux_pos_x - (Globals::screen->w - X_SPACE);
       else if (tux.physic.get_velocity_x() < 0 && scroll_x > tux_pos_x - X_SPACE && level->back_scrolling)
         scroll_x = tux_pos_x - X_SPACE;
       else
       {
-        if (tux.dir == RIGHT && scroll_x < tux_pos_x - (screen->w - X_SPACE))
-            scroll_x = tux_pos_x - (screen->w - X_SPACE);
+        if (tux.dir == RIGHT && scroll_x < tux_pos_x - (Globals::screen->w - X_SPACE))
+            scroll_x = tux_pos_x - (Globals::screen->w - X_SPACE);
         else if (tux.dir == LEFT && scroll_x > tux_pos_x - X_SPACE && level->back_scrolling)
             scroll_x = tux_pos_x - X_SPACE;
       }
@@ -384,14 +384,14 @@ void World::scrolling(double frame_ratio)
 
   else /*no debug*/
   {
-    if (tux.physic.get_velocity_x() > 0 && scroll_x < tux_pos_x - (screen->w - X_SPACE))
-      scroll_x = tux_pos_x - (screen->w - X_SPACE);
+    if (tux.physic.get_velocity_x() > 0 && scroll_x < tux_pos_x - (Globals::screen->w - X_SPACE))
+      scroll_x = tux_pos_x - (Globals::screen->w - X_SPACE);
     else if (tux.physic.get_velocity_x() < 0 && scroll_x > tux_pos_x - X_SPACE && level->back_scrolling)
       scroll_x = tux_pos_x - X_SPACE;
     else
     {
-      if (tux.dir == RIGHT && scroll_x < tux_pos_x - (screen->w - X_SPACE))
-          scroll_x = tux_pos_x - (screen->w - X_SPACE);
+      if (tux.dir == RIGHT && scroll_x < tux_pos_x - (Globals::screen->w - X_SPACE))
+          scroll_x = tux_pos_x - (Globals::screen->w - X_SPACE);
       else if (tux.dir == LEFT && scroll_x > tux_pos_x - X_SPACE && level->back_scrolling)
           scroll_x = tux_pos_x - X_SPACE;
     }
@@ -402,8 +402,8 @@ void World::scrolling(double frame_ratio)
   if(scroll_x < 0)
     scroll_x = 0;
 #ifndef RES320X240
-  if(scroll_x > level->width * 32 - screen->w)
-    scroll_x = level->width * 32 - screen->w;
+  if(scroll_x > level->width * 32 - Globals::screen->w)
+    scroll_x = level->width * 32 - Globals::screen->w;
 #else
   if(scroll_x > level->width * 32 - 640)
     scroll_x = level->width * 32 - 640;

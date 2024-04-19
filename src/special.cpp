@@ -109,8 +109,8 @@ Bullet::action(double frame_ratio)
 
 #ifndef RES320X240  
   if (base.x < scroll_x ||
-      base.x > scroll_x + screen->w ||
-      base.y > screen->h ||
+      base.x > scroll_x + Globals::screen->w ||
+      base.y > Globals::screen->h ||
       issolid(base.x + 4, base.y + 2) ||
       issolid(base.x, base.y + 2) ||
       life_count <= 0)
@@ -133,7 +133,7 @@ Bullet::draw()
 {
 #ifndef RES320X240
   if (base.x >= scroll_x - base.width &&
-      base.x <= scroll_x + screen->w)
+      base.x <= scroll_x + Globals::screen->w)
 #else
   if (base.x >= scroll_x - base.width &&
       base.x <= scroll_x + 640)
@@ -214,7 +214,7 @@ Upgrade::action(double frame_ratio)
       return;
   }
 #ifndef RES320X240
-  if(base.y > screen->h) {
+  if(base.y > Globals::screen->h) {
 #else
   if(base.y > 640) {
 #endif

@@ -74,7 +74,7 @@ GameSession::GameSession(const std::string& subset_, int levelnb_, int mode)
   restart_level();
 
 #ifdef TSCONTROL
-  old_mouse_y = screen->w;
+  old_mouse_y = Globals::screen->w;
 #endif
 }
 
@@ -117,7 +117,7 @@ GameSession::restart_level()
       for(std::vector<ResetPoint>::iterator i = get_level()->reset_points.begin();
           i != get_level()->reset_points.end(); ++i)
         {
-          if (i->x - screen->w/2 < old_x_pos && best_reset_point.x < i->x)
+          if (i->x - Globals::screen->w/2 < old_x_pos && best_reset_point.x < i->x)
             best_reset_point = *i;
         }
       
@@ -132,7 +132,7 @@ GameSession::restart_level()
               std::cout << "Warning: reset point inside a wall.\n";
           }                                                                  
 
-          scroll_x = best_reset_point.x - screen->w/2;
+          scroll_x = best_reset_point.x - Globals::screen->w/2;
         }
     }
     
@@ -169,13 +169,13 @@ GameSession::levelintro(void)
     drawgradient(get_level()->bkgd_top, get_level()->bkgd_bottom);
 
   sprintf(str, "%s", world->get_level()->name.c_str());
-  gold_text->drawf(str, 0, 200, A_HMIDDLE, A_TOP, 1);
+  Globals::gold_text->drawf(str, 0, 200, A_HMIDDLE, A_TOP, 1);
 
   sprintf(str, "TUX x %d", player_status.lives);
-  white_text->drawf(str, 0, 224, A_HMIDDLE, A_TOP, 1);
+  Globals::white_text->drawf(str, 0, 224, A_HMIDDLE, A_TOP, 1);
   
   sprintf(str, "by %s", world->get_level()->author.c_str());
-  white_small_text->drawf(str, 0, 360, A_HMIDDLE, A_TOP, 1);
+  Globals::white_small_text->drawf(str, 0, 360, A_HMIDDLE, A_TOP, 1);
   
 
   flipscreen();
@@ -261,7 +261,7 @@ GameSession::process_events()
               }
           
             case SDL_JOYBUTTONDOWN:
-              if (event.jbutton.button == joystick_keymap.start_button)
+              if (event.jbutton.button == Globals::joystick_keymap.start_button)
                 on_escape_press();
               break;
             }
@@ -344,7 +344,7 @@ GameSession::process_events()
                           }
                         break;
                       case SDLK_TAB:
-                        if(debug_mode)
+                        if(Globals::debug_mode)
                           {
                             tux.size = !tux.size;
                             if(tux.size == BIG)
@@ -356,23 +356,23 @@ GameSession::process_events()
                           }
                         break;
                       case SDLK_END:
-                        if(debug_mode)
+                        if(Globals::debug_mode)
                           player_status.distros += 50;
                         break;
                       case SDLK_DELETE:
-                        if(debug_mode)
+                        if(Globals::debug_mode)
                           tux.got_coffee = 1;
                         break;
                       case SDLK_INSERT:
-                        if(debug_mode)
+                        if(Globals::debug_mode)
                           tux.invincible_timer.start(TUX_INVINCIBLE_TIME);
                         break;
                       case SDLK_l:
-                        if(debug_mode)
+                        if(Globals::debug_mode)
                           --player_status.lives;
                         break;
                       case SDLK_s:
-                        if(debug_mode)
+                        if(Globals::debug_mode)
                           player_status.score += 1000;
                       case SDLK_f:
                         if(debug_fps)
@@ -401,32 +401,32 @@ GameSession::process_events()
 		  }
 		  old_mouse_y = event.motion.y;
 		  //stand still
-		  if ((event.motion.x < (screen->w/2)+(screen->w/10))
-		    && (event.motion.x > (screen->w/2)-(screen->w/10))) {
+		  if ((event.motion.x < (Globals::screen->w/2)+(Globals::screen->w/10))
+		    && (event.motion.x > (Globals::screen->w/2)-(Globals::screen->w/10))) {
 		      tux.input.fire = UP;
 		      tux.input.left = UP;
 			  tux.input.right = UP;
 		  }
 		  //run left
-		  else if ((event.motion.x > 0) && (event.motion.x < (screen->w/8))) {
+		  else if ((event.motion.x > 0) && (event.motion.x < (Globals::screen->w/8))) {
 		    tux.input.fire = DOWN;
 		    tux.input.left = DOWN;
 		    tux.input.right = UP;
 		  }
 		  //walk left
-		  else if ((event.motion.x > (screen->w/8)) && (event.motion.x < (screen->w/2))) {
+		  else if ((event.motion.x > (Globals::screen->w/8)) && (event.motion.x < (Globals::screen->w/2))) {
 		    tux.input.fire = UP;
 		    tux.input.right = UP;
 		    tux.input.left = DOWN;
 		  }
 		  //walk right
-		  else if ((event.motion.x > (screen->w/2)) && (event.motion.x < ((7*screen->w)/8))) {
+		  else if ((event.motion.x > (Globals::screen->w/2)) && (event.motion.x < ((7*Globals::screen->w)/8))) {
 		    tux.input.fire = UP;
 		    tux.input.right = DOWN;
 		    tux.input.left = UP;
 		  }
 		  //run right
-		  else if ((event.motion.x > ((7*screen->w)/8)) && (event.motion.x < screen->w)) {
+		  else if ((event.motion.x > ((7*Globals::screen->w)/8)) && (event.motion.x < Globals::screen->w)) {
 		    tux.input.fire = DOWN;
 		    tux.input.right = DOWN;
 		    tux.input.left = UP;
@@ -463,14 +463,14 @@ GameSession::process_events()
 
 
                 case SDL_JOYAXISMOTION:
-                  if (event.jaxis.axis == joystick_keymap.x_axis)
+                  if (event.jaxis.axis == Globals::joystick_keymap.x_axis)
                     {
-                      if (event.jaxis.value < -joystick_keymap.dead_zone)
+                      if (event.jaxis.value < -Globals::joystick_keymap.dead_zone)
                         {
                           tux.input.left  = DOWN;
                           tux.input.right = UP;
                         }
-                      else if (event.jaxis.value > joystick_keymap.dead_zone)
+                      else if (event.jaxis.value > Globals::joystick_keymap.dead_zone)
                         {
                           tux.input.left  = UP;
                           tux.input.right = DOWN;
@@ -481,29 +481,29 @@ GameSession::process_events()
                           tux.input.right = DOWN;
                         }
                     }
-                  else if (event.jaxis.axis == joystick_keymap.y_axis)
+                  else if (event.jaxis.axis == Globals::joystick_keymap.y_axis)
                     {
-                      if (event.jaxis.value > joystick_keymap.dead_zone)
+                      if (event.jaxis.value > Globals::joystick_keymap.dead_zone)
                         tux.input.down = DOWN;
-                      else if (event.jaxis.value < -joystick_keymap.dead_zone)
+                      else if (event.jaxis.value < -Globals::joystick_keymap.dead_zone)
                         tux.input.down = UP;
                       else
                         tux.input.down = UP;
                     }
                   break;
                 case SDL_JOYBUTTONDOWN:
-                  if (event.jbutton.button == joystick_keymap.a_button)
+                  if (event.jbutton.button == Globals::joystick_keymap.a_button)
                     tux.input.up = DOWN;
-                  else if (event.jbutton.button == joystick_keymap.b_button)
+                  else if (event.jbutton.button == Globals::joystick_keymap.b_button)
                     tux.input.fire = DOWN;
-                  else if (event.jbutton.button == joystick_keymap.start_button)
+                  else if (event.jbutton.button == Globals::joystick_keymap.start_button)
                     on_escape_press();
                   break;
 
                 case SDL_JOYBUTTONUP:
-                  if (event.jbutton.button == joystick_keymap.a_button)
+                  if (event.jbutton.button == Globals::joystick_keymap.a_button)
                     tux.input.up = UP;
-                  else if (event.jbutton.button == joystick_keymap.b_button)
+                  else if (event.jbutton.button == Globals::joystick_keymap.b_button)
                     tux.input.fire = UP;
                   break;
 
@@ -592,66 +592,66 @@ GameSession::draw()
 
   if(game_pause)
     {
-      int x = screen->h / 20;
+      int x = Globals::screen->h / 20;
       for(int i = 0; i < x; ++i)
         {
-          fillrect(i % 2 ? (pause_menu_frame * i)%screen->w : -((pause_menu_frame * i)%screen->w) ,(i*20+pause_menu_frame)%screen->h,screen->w,10,20,20,20, rand() % 20 + 1);
+          fillrect(i % 2 ? (pause_menu_frame * i)%Globals::screen->w : -((pause_menu_frame * i)%Globals::screen->w) ,(i*20+pause_menu_frame)%Globals::screen->h,Globals::screen->w,10,20,20,20, rand() % 20 + 1);
         }
-      fillrect(0,0,screen->w,screen->h,rand() % 50, rand() % 50, rand() % 50, 128);
-      blue_text->drawf("PAUSE - Press 'P' To Play", 0, 230, A_HMIDDLE, A_TOP, 1);
+      fillrect(0,0,Globals::screen->w,Globals::screen->h,rand() % 50, rand() % 50, rand() % 50, 128);
+      Globals::blue_text->drawf("PAUSE - Press 'P' To Play", 0, 230, A_HMIDDLE, A_TOP, 1);
     }
 
   if(Menu::current())
     {
       Menu::current()->draw();
-      mouse_cursor->draw();
+      Globals::mouse_cursor->draw();
     }
   
 #ifdef TSCONTROL
   if (show_mouse) MouseCursor::current()->draw();
-  int y = 5*screen->h/6;
-  int h = screen->h/6;
+  int y = 5*Globals::screen->h/6;
+  int h = Globals::screen->h/6;
   //run left
   fillrect(
     0,
 	y,
-	screen->w/8,
+	Globals::screen->w/8,
 	h,
 	20,20,20,
 	60
   );
   //walk left
   fillrect(
-    screen->w/8,
+    Globals::screen->w/8,
 	y,
-	screen->w/2 - screen->w/10 - screen->w/8,
+	Globals::screen->w/2 - Globals::screen->w/10 - Globals::screen->w/8,
 	h,
 	20,20,20,
 	40
   );
   //stand
   fillrect(
-    screen->w/2 - (screen->w/10),
+    Globals::screen->w/2 - (Globals::screen->w/10),
 	y,
-	screen->w/5,
+	Globals::screen->w/5,
 	h,
 	20,20,20,
 	20
   );
   //walk right
   fillrect(
-    screen->w/2 + (screen->w/10),
+    Globals::screen->w/2 + (Globals::screen->w/10),
 	y,
-	screen->w/2 - screen->w/10 - screen->w/8,
+	Globals::screen->w/2 - Globals::screen->w/10 - Globals::screen->w/8,
 	h,
 	20,20,20,
 	40
   );
   //run right
   fillrect(
-    7*screen->w/8,
+    7*Globals::screen->w/8,
 	y,
-	screen->w/8,
+	Globals::screen->w/8,
 	h,
 	20,20,20,
 	60
@@ -791,7 +791,7 @@ GameSession::run()
 
 #endif
       /* Calculate frames per second */
-      if(show_fps)
+      if(Globals::show_fps)
         {
           ++fps_cnt;
           fps_fps = (1000.0 / (float)fps_timer.get_gone()) * (float)fps_cnt;
@@ -834,35 +834,35 @@ GameSession::drawstatus()
   char str[60];
 
   sprintf(str, "%d", player_status.score);
-  white_text->draw("SCORE", 0, 0, 1);
-  gold_text->draw(str, 96/xdiv, 0, 1);
+  Globals::white_text->draw("SCORE", 0, 0, 1);
+  Globals::gold_text->draw(str, 96/xdiv, 0, 1);
 
   if(st_gl_mode == ST_GL_TEST)
     {
-      white_text->draw("Press ESC To Return",0,20,1);
+      Globals::white_text->draw("Press ESC To Return",0,20,1);
     }
 
   if(!time_left.check()) {
-    white_text->draw("TIME'S UP", 224/xdiv, 0, 1);
+    Globals::white_text->draw("TIME'S UP", 224/xdiv, 0, 1);
   } else if (time_left.get_left() > TIME_WARNING || (global_frame_counter % 10) < 5) {
     sprintf(str, "%d", time_left.get_left() / 1000 );
-    white_text->draw("TIME", 224/xdiv, 0, 1);
-    gold_text->draw(str, 304/xdiv, 0, 1);
+    Globals::white_text->draw("TIME", 224/xdiv, 0, 1);
+    Globals::gold_text->draw(str, 304/xdiv, 0, 1);
   }
 
   sprintf(str, "%d", player_status.distros);
-  white_text->draw("COINS", screen->h, 0, 1);
-  gold_text->draw(str, 608/xdiv, 0, 1);
+  Globals::white_text->draw("COINS", Globals::screen->h, 0, 1);
+  Globals::gold_text->draw(str, 608/xdiv, 0, 1);
 
-  white_text->draw("LIVES", 480/xdiv, 20);
+  Globals::white_text->draw("LIVES", 480/xdiv, 20);
   if (player_status.lives >= 5)
     {
       sprintf(str, "%dx", player_status.lives);
 #ifdef RES320X240
-      gold_text->draw_align(str, 617/xdiv-5, 20, A_RIGHT, A_TOP);
+      Globals::gold_text->draw_align(str, 617/xdiv-5, 20, A_RIGHT, A_TOP);
       tux_life->draw(565+(18*3)/xdiv+10, 20);
 #else
-      gold_text->draw_align(str, 617, 20, A_RIGHT, A_TOP);
+      Globals::gold_text->draw_align(str, 617, 20, A_RIGHT, A_TOP);
       tux_life->draw(565+(18*3), 20);
 #endif
     }
@@ -872,11 +872,11 @@ GameSession::drawstatus()
         tux_life->draw(565+(18*i)/xdiv,20);
     }
 
-  if(show_fps)
+  if(Globals::show_fps)
     {
       sprintf(str, "%2.1f", fps_fps);
-      white_text->draw("FPS", screen->h, 40, 1);
-      gold_text->draw(str, screen->h + 60, 40, 1);
+      Globals::white_text->draw("FPS", Globals::screen->h, 40, 1);
+      Globals::gold_text->draw(str, Globals::screen->h + 60, 40, 1);
     }
 //    updateSound();
 }
@@ -891,13 +891,13 @@ GameSession::drawendscreen()
   else
     drawgradient(get_level()->bkgd_top, get_level()->bkgd_bottom);
 
-  blue_text->drawf("GAMEOVER", 0, 200, A_HMIDDLE, A_TOP, 1);
+  Globals::blue_text->drawf("GAMEOVER", 0, 200, A_HMIDDLE, A_TOP, 1);
 
   sprintf(str, "SCORE: %d", player_status.score);
-  gold_text->drawf(str, 0, 224, A_HMIDDLE, A_TOP, 1);
+  Globals::gold_text->drawf(str, 0, 224, A_HMIDDLE, A_TOP, 1);
 
   sprintf(str, "COINS: %d", player_status.distros);
-  gold_text->drawf(str, 0, 256, A_HMIDDLE, A_TOP, 1);
+  Globals::gold_text->drawf(str, 0, 256, A_HMIDDLE, A_TOP, 1);
 
   flipscreen();
   
@@ -915,13 +915,13 @@ GameSession::drawresultscreen(void)
   else
     drawgradient(get_level()->bkgd_top, get_level()->bkgd_bottom);
 
-  blue_text->drawf("Result:", 0, 200, A_HMIDDLE, A_TOP, 1);
+  Globals::blue_text->drawf("Result:", 0, 200, A_HMIDDLE, A_TOP, 1);
 
   sprintf(str, "SCORE: %d", player_status.score);
-  gold_text->drawf(str, 0, 224, A_HMIDDLE, A_TOP, 1);
+  Globals::gold_text->drawf(str, 0, 224, A_HMIDDLE, A_TOP, 1);
 
   sprintf(str, "COINS: %d", player_status.distros);
-  gold_text->drawf(str, 0, 256, A_HMIDDLE, A_TOP, 1);
+  Globals::gold_text->drawf(str, 0, 256, A_HMIDDLE, A_TOP, 1);
 
   flipscreen();
   
@@ -934,7 +934,7 @@ std::string slotinfo(int slot)
   char tmp[1024];
   char slotfile[1024];
   std::string title;
-  sprintf(slotfile,"%s/slot%d.stsg",st_save_dir,slot);
+  sprintf(slotfile,"%s/slot%d.stsg",Globals::st_save_dir,slot);
 
   lisp_object_t* savegame = lisp_read_from_file(slotfile);
   if (savegame)

@@ -53,13 +53,13 @@ void Button::add_icon(std::string icon_file, int mw, int mh)
 
   if(!icon_file.empty())
   {
-    snprintf(filename, 1024, "%s/%s", datadir.c_str(), icon_file.c_str());
+    snprintf(filename, 1024, "%s/%s", Globals::datadir.c_str(), icon_file.c_str());
     if(!faccessible(filename))
-      snprintf(filename, 1024, "%s/images/icons/default-icon.png", datadir.c_str());
+      snprintf(filename, 1024, "%s/images/icons/default-icon.png", Globals::datadir.c_str());
   }
   else
   {
-    snprintf(filename, 1024, "%s/images/icons/default-icon.png", datadir.c_str());
+    snprintf(filename, 1024, "%s/images/icons/default-icon.png", Globals::datadir.c_str());
   }
 
   if(mw != -1 || mh != -1)
@@ -94,13 +94,13 @@ void Button::draw()
     char str[80];
     int i = -32;
 
-    if(0 > rect.x - (int)strlen(info.c_str()) * white_small_text->w)
-      i = rect.w + strlen(info.c_str()) * white_small_text->w;
+    if(0 > rect.x - (int)strlen(info.c_str()) * Globals::white_small_text->w)
+      i = rect.w + strlen(info.c_str()) * Globals::white_small_text->w;
 
     if(!info.empty())
-      white_small_text->draw(info.c_str(), i + rect.x - strlen(info.c_str()) * white_small_text->w, rect.y, 1);
+      Globals::white_small_text->draw(info.c_str(), i + rect.x - strlen(info.c_str()) * Globals::white_small_text->w, rect.y, 1);
     sprintf(str,"(%s)", SDL_GetKeyName(shortcut));
-    white_small_text->draw(str, i + rect.x - strlen(str) * white_small_text->w, rect.y + white_small_text->h+2, 1);
+    Globals::white_small_text->draw(str, i + rect.x - strlen(str) * Globals::white_small_text->w, rect.y + Globals::white_small_text->h+2, 1);
   }
   if(state == BUTTON_PRESSED || state == BUTTON_DEACTIVE)
     fillrect(rect.x,rect.y,rect.w,rect.h,75,75,75,200);

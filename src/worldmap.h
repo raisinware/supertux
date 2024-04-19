@@ -20,6 +20,8 @@
 #ifndef SUPERTUX_WORLDMAP_H
 #define SUPERTUX_WORLDMAP_H
 
+#include "texture.h"
+#include "timer.h"
 #include <vector>
 #include <string>
 

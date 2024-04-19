@@ -41,12 +41,12 @@
 #define SGN(x) ((x)>0 ? 1 : ((x)==0 ? 0:(-1)))
 #define ABS(x) ((x)>0 ? (x) : (-x))
 
-/* --- CLEAR SCREEN --- */
+/* --- CLEAR Globals::screen --- */
 
 void clearscreen(int r, int g, int b)
 {
 
-    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, r, g, b));
+    SDL_FillRect(Globals::screen, NULL, SDL_MapRGB(Globals::screen->format, r, g, b));
 }
 
 /* --- DRAWS A VERTICAL GRADIENT --- */
@@ -72,7 +72,7 @@ void fade(Surface *surface, int seconds, bool fade_out);
 
 void fade(const std::string& surface, int seconds, bool fade_out)
 {
-Surface* sur = new Surface(datadir + surface, IGNORE_ALPHA);
+Surface* sur = new Surface(Globals::datadir + surface, IGNORE_ALPHA);
 fade(sur, seconds, fade_out);
 delete sur;
 }
@@ -146,31 +146,31 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
     }
 }
 
-/* Draw a single pixel on the screen. */
+/* Draw a single pixel on the Globals::screen. */
 void drawpixel(int x, int y, Uint32 pixel)
 {
-  /* Lock the screen for direct access to the pixels */
-  if ( SDL_MUSTLOCK(screen) )
+  /* Lock the Globals::screen for direct access to the pixels */
+  if ( SDL_MUSTLOCK(Globals::screen) )
     {
-      if ( SDL_LockSurface(screen) < 0 )
+      if ( SDL_LockSurface(Globals::screen) < 0 )
         {
-          fprintf(stderr, "Can't lock screen: %s\n", SDL_GetError());
+          fprintf(stderr, "Can't lock Globals::screen: %s\n", SDL_GetError());
           return;
         }
     }
 
-  if(!(x < 0 || y < 0 || x > screen->w || y > screen->h))
-    putpixel(screen, x, y, pixel);
+  if(!(x < 0 || y < 0 || x > Globals::screen->w || y > Globals::screen->h))
+    putpixel(Globals::screen, x, y, pixel);
 
-  if ( SDL_MUSTLOCK(screen) )
+  if ( SDL_MUSTLOCK(Globals::screen) )
     {
-      SDL_UnlockSurface(screen);
+      SDL_UnlockSurface(Globals::screen);
     }
   /* Update just the part of the display that we've changed */
 #ifndef RES320X240
-  update_rect(screen, x, y, 1, 1);
+  update_rect(Globals::screen, x, y, 1, 1);
 #else
-  update_rect(screen, x/2, y/2, 1, 1);
+  update_rect(Globals::screen, x/2, y/2, 1, 1);
 #endif
 }
 
@@ -186,7 +186,7 @@ void drawline(int x1, int y1, int x2, int y2, int r, int g, int b, int a)
 
       /* Basic unantialiased Bresenham line algorithm */
       int lg_delta, sh_delta, cycle, lg_step, sh_step;
-      Uint32 color = SDL_MapRGBA(screen->format, r, g, b, a);
+      Uint32 color = SDL_MapRGBA(Globals::screen->format, r, g, b, a);
 
       lg_delta = x2 - x1;
       sh_delta = y2 - y1;
@@ -257,11 +257,11 @@ if(h < 0)
 
       if(a != 255)
         {
-          temp = SDL_CreateRGBSurface(0, rect.w, rect.h, screen->format->BitsPerPixel,
-                                      screen->format->Rmask,
-                                      screen->format->Gmask,
-                                      screen->format->Bmask,
-                                      screen->format->Amask);
+          temp = SDL_CreateRGBSurface(0, rect.w, rect.h, Globals::screen->format->BitsPerPixel,
+                                      Globals::screen->format->Rmask,
+                                      Globals::screen->format->Gmask,
+                                      Globals::screen->format->Bmask,
+                                      Globals::screen->format->Amask);
 
 
           src.x = 0;
@@ -269,34 +269,34 @@ if(h < 0)
           src.w = rect.w;
           src.h = rect.h;
 
-          SDL_FillRect(temp, &src, SDL_MapRGB(screen->format, r, g, b));
+          SDL_FillRect(temp, &src, SDL_MapRGB(Globals::screen->format, r, g, b));
 
-          SDL_UpperBlit(temp,0,screen,&rect);
+          SDL_UpperBlit(temp,0,Globals::screen,&rect);
 
           SDL_FreeSurface(temp);
         }
       else
-        SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, r, g, b));
+        SDL_FillRect(Globals::screen, &rect, SDL_MapRGB(Globals::screen->format, r, g, b));
 
 }
 
 
-/* --- UPDATE SCREEN --- */
+/* --- UPDATE Globals::screen --- */
 
 void updatescreen(void)
 {
-  update_rect(screen, 0, 0, screen->w, screen->h);
+  update_rect(Globals::screen, 0, 0, Globals::screen->w, Globals::screen->h);
 }
 
 void flipscreen(void)
 {
-  SDL_UpdateWindowSurface(window);
+  SDL_UpdateWindowSurface(Globals::window);
 }
 
 void fadeout()
 {
   clearscreen(0, 0, 0);
-  white_text->draw_align("Loading...", screen->w/2, screen->h/2, A_HMIDDLE, A_TOP);
+  Globals::white_text->draw_align("Loading...", Globals::screen->w/2, Globals::screen->h/2, A_HMIDDLE, A_TOP);
   flipscreen();
 }
 
@@ -308,6 +308,6 @@ void update_rect(SDL_Surface *scr, Sint32 x, Sint32 y, Sint32 w, Sint32 h)
     .w = w,
     .h = h
   };
-  SDL_UpdateWindowSurfaceRects(window, &rect, 1);
+  SDL_UpdateWindowSurfaceRects(Globals::window, &rect, 1);
 }
 

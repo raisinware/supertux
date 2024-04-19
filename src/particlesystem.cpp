@@ -29,8 +29,8 @@
 ParticleSystem::ParticleSystem()
 {
 #ifndef RES320X240
-    virtual_width = screen->w;
-    virtual_height = screen->h;
+    virtual_width = Globals::screen->w;
+    virtual_height = Globals::screen->h;
 #else
     virtual_width = 640;
     virtual_height = 480;
@@ -63,13 +63,13 @@ void ParticleSystem::draw(float scrollx, float scrolly, int layer)
 
         // particle on screen
 #ifndef RES320X240
-        if(x >= screen->w && xmax >= screen->w)
+        if(x >= Globals::screen->w && xmax >= Globals::screen->w)
             continue;
-        if(y >= screen->h && ymax >= screen->h)
+        if(y >= Globals::screen->h && ymax >= Globals::screen->h)
             continue;
         
-        if(x > screen->w) x -= virtual_width;
-        if(y > screen->h) y -= virtual_height;
+        if(x > Globals::screen->w) x -= virtual_width;
+        if(y > Globals::screen->h) y -= virtual_height;
 #else
         if(x >= 640 && xmax >= 640)
             continue;
@@ -86,12 +86,12 @@ void ParticleSystem::draw(float scrollx, float scrolly, int layer)
 
 SnowParticleSystem::SnowParticleSystem()
 {
-    snowimages[0] = new Surface(datadir+"/images/shared/snow0.png", USE_ALPHA);
-    snowimages[1] = new Surface(datadir+"/images/shared/snow1.png", USE_ALPHA);
-    snowimages[2] = new Surface(datadir+"/images/shared/snow2.png", USE_ALPHA);
+    snowimages[0] = new Surface(Globals::datadir+"/images/shared/snow0.png", USE_ALPHA);
+    snowimages[1] = new Surface(Globals::datadir+"/images/shared/snow1.png", USE_ALPHA);
+    snowimages[2] = new Surface(Globals::datadir+"/images/shared/snow2.png", USE_ALPHA);
 
 #ifndef RES320X240
-    virtual_width = screen->w * 2;
+    virtual_width = Globals::screen->w * 2;
 
 #else
     virtual_width = 640 * 2;
@@ -102,7 +102,7 @@ SnowParticleSystem::SnowParticleSystem()
         SnowParticle* particle = new SnowParticle;
         particle->x = rand() % int(virtual_width);
 #ifndef RES320X240
-        particle->y = rand() % screen->h;
+        particle->y = rand() % Globals::screen->h;
 #else
         particle->y = rand() % 480;
 #endif
@@ -131,7 +131,7 @@ void SnowParticleSystem::simulate(float elapsed_time)
         SnowParticle* particle = (SnowParticle*) *i;
         particle->y += particle->speed * elapsed_time;
 #ifndef RES320X240
-        if(particle->y > screen->h) {
+        if(particle->y > Globals::screen->h) {
 #else
         if(particle->y > 480) {
 #endif
@@ -143,7 +143,7 @@ void SnowParticleSystem::simulate(float elapsed_time)
 
 CloudParticleSystem::CloudParticleSystem()
 {
-    cloudimage = new Surface(datadir + "/images/shared/cloud.png", USE_ALPHA);
+    cloudimage = new Surface(Globals::datadir + "/images/shared/cloud.png", USE_ALPHA);
 
     virtual_width = 2000.0;
 

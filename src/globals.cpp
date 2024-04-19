@@ -20,9 +20,6 @@
 
 #include "globals.h"
 
-/** The datadir prefix prepended when loading game data file */
-std::string datadir;
-
 JoystickKeymap::JoystickKeymap()
 {
   a_button     = 0;
@@ -34,6 +31,11 @@ JoystickKeymap::JoystickKeymap()
     
   dead_zone = 4096;
 }
+
+namespace Globals {
+
+/** The datadir prefix prepended when loading game data file */
+std::string datadir;
 
 JoystickKeymap joystick_keymap;
 
@@ -69,6 +71,8 @@ bool launch_leveleditor_mode = false;
 char *st_dir, *st_save_dir;
 
 SDL_Joystick * js;
+
+}
 
 /* Returns 1 for every button event, 2 for a quit event and 0 for no event. */
 int wait_for_event(SDL_Event& event,unsigned int min_delay, unsigned int max_delay, bool empty_events)
